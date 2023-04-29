@@ -1,18 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import Post from './Post';
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchPosts();
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
   const fetchPosts = async () => {
-    const response = await fetch('http://192.168.29.210:3001/posts');
-    const data = await response.json();
-    setPosts(data);
+    try {
+      const response = await fetch('http://192.168.29.210:3001/posts');
+      const data = await response.json();
+      setPosts(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -27,6 +38,9 @@ const Feed = () => {
         data={posts}
         renderItem={renderItem}
         keyExtractor={(item) => item.postID.toString()}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

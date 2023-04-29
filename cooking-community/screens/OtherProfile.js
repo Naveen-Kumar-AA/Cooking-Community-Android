@@ -9,8 +9,8 @@ const OtherProfile = ({ route }) => {
   const [userPosts, setUserPosts] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentUsername, setCurrentUsername] = useState("");
-  const [followerCount, setFollowerCount] = useState(false);
-
+  const [noOfPosts, setNoOfPosts] = useState(0);
+ 
   
   useEffect(()=>{
     const getCurrentUsername = async () => {
@@ -42,6 +42,7 @@ const OtherProfile = ({ route }) => {
                 const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${user.username}`);
                 const data = await response.json();
                 setUserPosts(data);
+                setNoOfPosts(data.length);
               } catch (error) {
                 console.error(error);
               }
@@ -101,28 +102,6 @@ const OtherProfile = ({ route }) => {
     );
   };
 
-  const getAvatarBackgroundColor = () => {
-    const colors = [
-      '#e57373',
-      '#f06292',
-      '#ba68c8',
-      '#9575cd',
-      '#7986cb',
-      '#64b5f6',
-      '#4fc3f7',
-      '#4dd0e1',
-      '#4db6ac',
-      '#81c784',
-      '#aed581',
-      '#ff8a65',
-      '#d4e157',
-      '#ffdd77',
-      '#ffb74d',
-      '#a1887f',
-      '#90a4ae',
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
   const toggleFollowClick = () => {
     fetch("http://192.168.29.210:3001/toggle-follow", {
       method: "POST",
@@ -152,14 +131,6 @@ const OtherProfile = ({ route }) => {
     });
   };
   
-  const getUsernameInitials = () => {
-    if (!userDetails || !userDetails.first_name || !userDetails.last_name) {
-      return '';
-    }
-    const firstInitial = userDetails.first_name.charAt(0);
-    const lastInitial = userDetails.last_name.charAt(0);
-    return firstInitial + lastInitial;
-  };
   return (
     <ScrollView style={styles.container}>
       {userDetails ? (
@@ -173,24 +144,25 @@ const OtherProfile = ({ route }) => {
               <Text style={styles.username}>{userDetails.username}</Text>
               <Text style={styles.name}>{userDetails.first_name} {userDetails.last_name}</Text>
               <View style={styles.followDetails}>
+                <Text style={styles.followers}>{userDetails.no_of_followers} followers</Text>
+                <Text style={styles.following}>{userDetails.no_of_following} following</Text>
+                <Text style={styles.following}> </Text>
+              <Text style={styles.noOfPosts}>{noOfPosts} posts</Text> 
+              </View>
               {currentUsername!=user.username?<TouchableOpacity style={styles.followButton} onPress={toggleFollowClick}>
                 <Text style={styles.followButtonText}>{isFollowing ? "following" : "follow"}</Text>
               </TouchableOpacity>:<View></View>}
-
-                <Text style={styles.followers}>{userDetails.no_of_followers} followers</Text>
-                <Text style={styles.following}>{userDetails.no_of_following} following</Text>
-              </View>
               <Text style={styles.bio}>{userDetails.bio}</Text>
             </View>
           </View>
           <View style={styles.gallery}>
-            <Text style={styles.galleryTitle}>Photos</Text>
-            <FlatList
+            <Text style={styles.galleryTitle}>POSTS</Text>
+            {noOfPosts?<FlatList
               data={userPosts}
               renderItem={renderPost}
               keyExtractor={(item) => item.postID}
               contentContainerStyle={styles.galleryList}
-            />
+            />:<Text style={styles.noPostsText}>No posts by {userDetails.username} yet...</Text>}
           </View>
         </>
       ) : (
@@ -244,6 +216,7 @@ const styles = StyleSheet.create({
         },
         followButton: {
           backgroundColor: '#2196F3',
+          width: 100,
           paddingVertical: 8,
           paddingHorizontal: 16,
           borderRadius: 4,
@@ -254,15 +227,15 @@ const styles = StyleSheet.create({
           fontWeight:"bold"
         },
         followers: {
-          color: '#777',
+          color: '#666',
           marginRight: 8,
         },
         following: {
-          color: '#777',
+          color: '#666',
         },
         bio: {
           fontSize: 14,
-          color: '#555',
+          color: '#666',
           marginTop: 8,
         },
         gallery: {
@@ -286,8 +259,44 @@ const styles = StyleSheet.create({
           height: undefined,
           aspectRatio: 1,
         },
+        noOfPosts:{
+          color: '#666',
+      },
+      noPostsText:{
+        color:'#666',
+      }
       });
 
       
 
+      const getAvatarBackgroundColor = () => {
+        const colors = [
+          '#e57373',
+          '#f06292',
+          '#ba68c8',
+          '#9575cd',
+          '#7986cb',
+          '#64b5f6',
+          '#4fc3f7',
+          '#4dd0e1',
+          '#4db6ac',
+          '#81c784',
+          '#aed581',
+          '#ff8a65',
+          '#d4e157',
+          '#ffdd77',
+          '#ffb74d',
+          '#a1887f',
+          '#90a4ae',
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+      };
+      const getUsernameInitials = () => {
+        if (!userDetails || !userDetails.first_name || !userDetails.last_name) {
+          return '';
+        }
+        const firstInitial = userDetails.first_name.charAt(0);
+        const lastInitial = userDetails.last_name.charAt(0);
+        return firstInitial + lastInitial;
+      };
 export default OtherProfile;

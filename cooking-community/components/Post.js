@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BottomSheet } from 'react-native-elements';
+
+
 
 const Post = ({ post_details }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -9,10 +12,13 @@ const Post = ({ post_details }) => {
   const [likesCount, setLikesCount] = useState(parseInt(post_details.likes));
   const [currentUsername, setCurrentUsername] = useState("");
   const [serverLikeStatus, setServerLikeStatus] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
+
 
   const toggleLike = useCallback(() => {
     setIsLiked(prevIsLiked => !prevIsLiked);
@@ -103,27 +109,68 @@ const Post = ({ post_details }) => {
     );
   };
 
+  const handleDeletePost = async ()=>{
+    fetch(`http://192.168.29.210:3001/delete-post/${post_details.postID}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    }).then(data => {
+      if(data.success){
+        console.log(data.success);
+      }
+      if(data.error){
+        console.log(data.error);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
   return (
-    <TouchableOpacity onPress={toggleExpand} activeOpacity={0.7}>
-      <View style={styles.card}>
-        <View style={styles.header}>
-          {renderAvatar(post_details.username)}
-          <Text style={styles.date}>{post_details.date}</Text>
-        </View>
-        <Text style={styles.title}>{post_details.title}</Text>
-        <Text style={styles.meal}>{post_details.meal}</Text>
-        <Text style={styles.cuisine}>{post_details.cuisine}</Text>
-        <Text style={styles.caption}>{post_details.cuisine}</Text>
-        <View style={styles.likesContainer}>
-          <TouchableOpacity onPress={toggleLike} activeOpacity={0.7}>
-            <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={24} color={isLiked ? 'red' : 'black'} />
+    <View style={styles.card}>
+      <View style={styles.header}>
+        {renderAvatar(post_details.username)}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={toggleExpand} activeOpacity={0.7}>
+            <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.likesCount}>{likesCount} likes</Text>
+          <TouchableOpacity onPress={() => setIsMenuOpen(true)} activeOpacity={0.7}>
+            <Ionicons name="ellipsis-vertical" size={24} color="black" />
+          </TouchableOpacity>
         </View>
-        {isExpanded && <Text style={styles.recipe_content}>{post_details.recipe_content}</Text>}
       </View>
-    </TouchableOpacity>
+      <Text style={styles.date}>{post_details.date}</Text>
+      <Text style={styles.title}>{post_details.title}</Text>
+      <Text style={styles.meal}>{post_details.meal}</Text>
+      <Text style={styles.cuisine}>{post_details.cuisine}</Text>
+      <Text style={styles.caption}>{post_details.caption}</Text>
+      <View style={styles.likesContainer}>
+        <TouchableOpacity onPress={toggleLike} activeOpacity={0.7}>
+          <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={24} color={isLiked ? 'red' : 'black'} />
+        </TouchableOpacity>
+        <Text style={styles.likesCount}>{likesCount} likes</Text>
+      </View>
+      {isExpanded && <Text style={styles.recipe_content}>{post_details.recipe_content}</Text>}
+      <BottomSheet isVisible={isMenuOpen} containerStyle={styles.bottomSheet}>
+        <TouchableOpacity onPress={handleDeletePost} style={styles.bottomSheetItem}>
+          {currentUsername == post_details.username?<Text style={styles.buttonText}>Delete post</Text>:<View></View>}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </BottomSheet>
+    </View>
   );
+  
+  
+  
 };
 
 const styles = StyleSheet.create({
@@ -195,6 +242,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  bottomSheet: {
+    backgroundColor: 'rgba(80, 80, 80, 0.90)',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    height: '40%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  bottomSheetItem: {
+    paddingVertical: 10,
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EAEAEA',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
+  deleteButton: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'red',
+    width: '100%',
+    width: '100%',
+  },
+  cancelButton: {
+    fontSize: 20,
+    width: '100%',
+    fontWeight: 'bold',
+    color: '#fff',
+    width: '100%',
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  
 });
 
 export default Post;

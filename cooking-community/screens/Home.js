@@ -4,23 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Feed from '../components/Feed';
 import Search from '../components/Search';
+import Profile from '../components/Profile';
+import NewPost from '../components/NewPost';
 
-
-const NewPostScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Create a new post</Text>
-    </View>
-  );
-};
-
-const ProfileScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>User profile</Text>
-    </View>
-  );
-};
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +35,7 @@ const HomeTab = ({navigation}) => {
       />
       <Tab.Screen
         name="New Post"
-        component={NewPostScreen}
+        component={NewPost}
         options={{
             headerShown:false,
           tabBarIcon: ({ color, size }) => (
@@ -59,7 +45,7 @@ const HomeTab = ({navigation}) => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={Profile}
         options={{
           headerShown:false,
           tabBarIcon: ({ color, size }) => (
