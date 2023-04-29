@@ -5,6 +5,9 @@ import OtherProfile from '../screens/OtherProfile';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Home from '../screens/Home';
+import Comments from '../screens/Comments';
+import SavedPosts from '../screens/SavedPosts';
+import EditProfile from '../screens/EditProfile';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +32,9 @@ const AppNavigation = () => {
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="OtherProfile" component={OtherProfile} />
+      <Stack.Screen name="Comments" component={Comments} />
+      <Stack.Screen name="SavedPosts" component={SavedPosts} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 };

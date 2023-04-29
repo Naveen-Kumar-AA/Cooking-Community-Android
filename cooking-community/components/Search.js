@@ -44,12 +44,33 @@ function Search({navigation}) {
     );
   };
 
+  // const renderAvatar = (username) => {
+  //   const color = randomHexColor();
+  //   return (
+  //     <View style={[styles.avatar, { backgroundColor: color }]}>
+  //       <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
+  //     </View>
+  //   );
+  // };
+  const avatarBackgroundColors = [
+    '#FF7F50',
+    '#FFD700',
+    '#00FF7F',
+    '#00BFFF',
+    '#6A5ACD',
+    '#FF69B4',
+    '#8B008B',
+    '#FF4500'
+  ];
+  
+  
   const renderAvatar = (username) => {
-    const color = randomHexColor();
+    const colorIndex = Math.floor(Math.random() * avatarBackgroundColors.length);
+    const color = avatarBackgroundColors[colorIndex];
     return (
-      <View style={[styles.avatar, { backgroundColor: color }]}>
-        <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
-      </View>
+        <View style={[styles.avatar, { backgroundColor: color }]}>
+          <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
+        </View>
     );
   };
 

@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity } from '
 import Post from '../components/Post';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RefreshControl } from 'react-native';
-
+import { Ionicons } from '@expo/vector-icons';
+import { BottomSheet } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 const Profile = () => {
   const [userDetails, setUserDetails] = useState(null);
@@ -11,6 +13,8 @@ const Profile = () => {
   const [currentUsername, setCurrentUsername] = useState("");
   const [noOfPosts, setNoOfPosts] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigation = useNavigation();
 
   const onRefresh = useCallback(() => {
     console.log("Refreshing...");
@@ -100,7 +104,9 @@ const Profile = () => {
     );
   };
 
-  return (
+
+
+  return (<>
     <ScrollView style={styles.container}
     refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -108,6 +114,7 @@ const Profile = () => {
     >
       {userDetails ? (
         <>
+        
           <View style={styles.header}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{userDetails.username.charAt(0).toUpperCase()}</Text>
@@ -124,6 +131,9 @@ const Profile = () => {
               </View>
               <Text style={styles.bio}>{userDetails.bio}</Text>
             </View>
+            <TouchableOpacity onPress={()=>{setIsMenuOpen(true)}} activeOpacity={0.7}>
+            <Ionicons name="ellipsis-vertical" size={24} color="black" />
+          </TouchableOpacity>
           </View>
           <View style={styles.gallery}>
             <Text style={styles.galleryTitle}>POSTS</Text>
@@ -134,11 +144,23 @@ const Profile = () => {
               contentContainerStyle={styles.galleryList}
             />
           </View>
+          <BottomSheet isVisible={isMenuOpen} containerStyle={styles.bottomSheet}>
+      <TouchableOpacity onPress={()=>{navigation.navigate("SavedPosts");setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
+          <Text style={styles.buttonText}>Saved posts</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{navigation.navigate("EditProfile"); setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
+          <Text style={styles.buttonText}>Edit Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </BottomSheet>
         </>
       ) : (
         <Text>Loading...</Text>
       )}
     </ScrollView>
+    </>
   );
 }
 
@@ -232,7 +254,46 @@ const styles = StyleSheet.create({
         },
         noOfPosts:{
             color: '#666',
-        }
+        },
+        bottomSheet: {
+          backgroundColor: 'rgba(80, 80, 80, 0.90)',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          padding: 20,
+          height: '40%',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          alignItems: 'center',
+        },
+        bottomSheetItem: {
+          paddingVertical: 10,
+          width: '100%',
+          borderBottomWidth: 1,
+          borderBottomColor: '#EAEAEA',
+          alignItems: 'flex-start',
+          flexDirection: 'row',
+        },
+        deleteButton: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          color: 'red',
+          width: '100%',
+          width: '100%',
+        },
+        cancelButton: {
+          fontSize: 20,
+          width: '100%',
+          fontWeight: 'bold',
+          color: '#fff',
+          width: '100%',
+        },
+        buttonText: {
+          fontSize: 18,
+          color: '#fff',
+        },
+        
       });
 
 

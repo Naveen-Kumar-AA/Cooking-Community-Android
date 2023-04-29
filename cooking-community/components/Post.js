@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet } from 'react-native-elements';
-
-
+import Icon from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 
 const Post = ({ post_details }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -13,7 +13,8 @@ const Post = ({ post_details }) => {
   const [currentUsername, setCurrentUsername] = useState("");
   const [serverLikeStatus, setServerLikeStatus] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [noOfComments, setNoOfComments] = useState(0);
+  const navigation = useNavigation();
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -84,30 +85,48 @@ const Post = ({ post_details }) => {
     .catch(error => {
       console.log(error);
     });
+    const fetchNoOfComments = async ()=>{
+      try {
+        const response = await fetch(`http://192.168.29.210:3001/comments/no-of-comments/${post_details.postID}`);
+        const data = await response.json();
+        setNoOfComments(data.result[0].count);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchNoOfComments()
   }, [currentUsername, post_details.postID]);
 
   useEffect(() => {
     setIsLiked(serverLikeStatus);
   }, [serverLikeStatus]);
 
-  function randomHexColor() {
-    // Generate a random color code in hexadecimal format
-    const hexCode = Math.floor(Math.random() * 16777215).toString(16);
-    // Pad the code with leading zeros to make sure it has 6 digits
-    return "#" + "0".repeat(6 - hexCode.length) + hexCode;
-  }
+
+  const avatarBackgroundColors = [
+    '#FF7F50',
+    '#FFD700',
+    '#00FF7F',
+    '#00BFFF',
+    '#6A5ACD',
+    '#FF69B4',
+    '#8B008B',
+    '#FF4500'
+  ];
+  
   
   const renderAvatar = (username) => {
-    const color = randomHexColor();
+    const colorIndex = Math.floor(Math.random() * avatarBackgroundColors.length);
+    const color = avatarBackgroundColors[colorIndex];
     return (
       <View style={styles.userContainer}>
-        <View  style={[styles.avatar, { backgroundColor: color }]}>
+        <View style={[styles.avatar, { backgroundColor: color }]}>
           <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
         </View>
         <Text style={styles.username}>{post_details.username}</Text>
       </View>
     );
   };
+  
 
   const handleDeletePost = async ()=>{
     fetch(`http://192.168.29.210:3001/delete-post/${post_details.postID}`, {
@@ -122,6 +141,7 @@ const Post = ({ post_details }) => {
       return response.json();
     }).then(data => {
       if(data.success){
+        setIsMenuOpen(false);
         console.log(data.success);
       }
       if(data.error){
@@ -130,6 +150,35 @@ const Post = ({ post_details }) => {
     })
     .catch(error => {
       console.error(error);
+    });
+  }
+
+  const handleCommentButton = () => {
+    navigation.navigate('Comments', { postId: post_details.postID });
+  }
+  
+  const handleSaveButton = () => {
+    const req_body = {
+      postID: post_details.postID,
+      userID: currentUsername
+    };
+
+    fetch('http://192.168.29.210:3001/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req_body)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.message) {
+        setIsMenuOpen(false);
+        console.log(data.message);
+      }
+    })
+    .catch(error => {
+      console.log(error);
     });
   }
 
@@ -152,16 +201,26 @@ const Post = ({ post_details }) => {
       <Text style={styles.cuisine}>{post_details.cuisine}</Text>
       <Text style={styles.caption}>{post_details.caption}</Text>
       <View style={styles.likesContainer}>
-        <TouchableOpacity onPress={toggleLike} activeOpacity={0.7}>
-          <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={24} color={isLiked ? 'red' : 'black'} />
-        </TouchableOpacity>
-        <Text style={styles.likesCount}>{likesCount} likes</Text>
-      </View>
+  <TouchableOpacity onPress={toggleLike} activeOpacity={0.7}>
+    <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={24} color={isLiked ? 'red' : 'black'} />
+  </TouchableOpacity>
+  <Text style={styles.likesCount}>{likesCount} likes</Text>
+  <TouchableOpacity onPress={handleCommentButton} style={styles.commentButtonContainer}>
+    <Icon name="message-circle" size={25} color="#555" />
+  </TouchableOpacity>
+  <Text style={styles.likesCount}>{noOfComments} comments</Text>
+</View>
+
       {isExpanded && <Text style={styles.recipe_content}>{post_details.recipe_content}</Text>}
       <BottomSheet isVisible={isMenuOpen} containerStyle={styles.bottomSheet}>
-        <TouchableOpacity onPress={handleDeletePost} style={styles.bottomSheetItem}>
-          {currentUsername == post_details.username?<Text style={styles.buttonText}>Delete post</Text>:<View></View>}
-        </TouchableOpacity>
+      {currentUsername === post_details.username?
+      <TouchableOpacity onPress={handleDeletePost} style={styles.bottomSheetItem}>
+          <Text style={styles.buttonText}>Delete post</Text>
+        </TouchableOpacity>:<View></View>}
+        {currentUsername != post_details.username?
+          <TouchableOpacity onPress={handleSaveButton} style={styles.bottomSheetItem}>
+            <Text style={styles.buttonText}>Save post</Text>
+          </TouchableOpacity>:<View></View>}
         <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
@@ -211,7 +270,10 @@ const styles = StyleSheet.create({
   likesContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 10,
+  },
+  commentButtonContainer: {
+    marginLeft: 10,
   },
   likesCount: {
     fontSize: 16,
