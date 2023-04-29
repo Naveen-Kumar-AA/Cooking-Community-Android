@@ -48,7 +48,7 @@ function Search({navigation}) {
     const color = randomHexColor();
     return (
       <View style={[styles.avatar, { backgroundColor: color }]}>
-        <Text style={styles.avatarText}>{username.charAt(0)}</Text>
+        <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
       </View>
     );
   };

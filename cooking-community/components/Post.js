@@ -96,7 +96,7 @@ const Post = ({ post_details }) => {
     return (
       <View style={styles.userContainer}>
         <View  style={[styles.avatar, { backgroundColor: color }]}>
-          <Text style={styles.avatarText}>{username.charAt(0)}</Text>
+          <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
         </View>
         <Text style={styles.username}>{post_details.username}</Text>
       </View>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#d3d3d3',
     width: 40,
     height: 40,
-    borderRadius: 10,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
