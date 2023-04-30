@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import Post from './Post';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -15,9 +16,28 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
+  // const fetchPosts = async () => {
+  //   try {
+  //     const response = await fetch('http://192.168.29.210:3001/posts');
+  //     const data = await response.json();
+  //     setPosts([...data]); // create new array with updated data
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setRefreshing(false); // set refreshing to false after fetch completes
+  //   }
+  // };
+  
+
   const fetchPosts = async () => {
     try {
-      const response = await fetch('http://192.168.29.210:3001/posts');
+      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+      const response = await fetch('http://192.168.29.210:3001/posts', {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include token in Authorization header
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await response.json();
       setPosts([...data]); // create new array with updated data
     } catch (error) {
@@ -27,7 +47,6 @@ const Feed = () => {
     }
   };
   
-
   const renderItem = ({ item }) => {
     return (
       <Post post_details={item} />

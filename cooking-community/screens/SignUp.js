@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -17,45 +18,69 @@ const SignUp = ({ navigation }) => {
       console.log(error);
     }
   }
+const storeToken = async (token) => {
+  try {
+    await AsyncStorage.setItem('token', token);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-  const handleSignUp = () => {
-    // Check if password and confirm password match
-    if (password !== C_password) {
-      console.log('Passwords do not match');
-      return;
-    }
+const handleSignUp = async () => {
+  // Check if password and confirm password match
+  if (password !== C_password) {
+    console.log('Passwords do not match');
+    return;
+  }
 
-    // Send sign up request to server
-    fetch('http://192.168.29.210:3001/do-signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        First_name,
-        Last_name,
-        phn_number,
-        email,
-        password,
-        C_password
-      }),
-    })
-      .then(response => {
-        response.json()
-    })
-      .then(data => {
-        if (data) {
+  // Send sign up request to server
+  const response = await fetch('http://192.168.29.210:3001/do-signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username,
+      First_name,
+      Last_name,
+      phn_number,
+      email,
+      password,
+      C_password
+    }),
+  })
+  const data = await response.json();
+  console.log(data);
+  if(data){
+    if (data.token) {
           storeUsername(username);
+          storeToken(data.token);
           navigation.navigate('Home');
         } else {
           console.log('Cannot create account');
         }
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+  }
+  else{
+    console.log(data);
+  }
+  // .then(response => {
+  //   console.log(response);
+  //   response.json()
+  // })
+  // .then(data => {
+  //   console.log(data);
+  //   if (data.token) {
+  //     storeUsername(username);
+  //     storeToken(data.token);
+  //     navigation.navigate('Home');
+  //   } else {
+  //     console.log('Cannot create account');
+  //   }
+  // })
+  // .catch(error => {
+  //   console.log(error);
+  // });
+};
 
   return (
     <View style={styles.container}>

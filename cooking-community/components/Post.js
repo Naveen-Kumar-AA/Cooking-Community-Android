@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Post = ({ post_details }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -14,12 +15,14 @@ const Post = ({ post_details }) => {
   const [serverLikeStatus, setServerLikeStatus] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [noOfComments, setNoOfComments] = useState(0);
+  const [token,setToken] = useState("");
   const navigation = useNavigation();
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
+  
 
   const toggleLike = useCallback(() => {
     setIsLiked(prevIsLiked => !prevIsLiked);
@@ -35,6 +38,7 @@ const Post = ({ post_details }) => {
     fetch('http://192.168.29.210:3001/update-like-status', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(req_body)
@@ -53,6 +57,8 @@ const Post = ({ post_details }) => {
   const getCurrentUsername = useCallback(async () => {
     try {
       const username = await AsyncStorage.getItem('username');
+      const token = await AsyncStorage.getItem('token');
+      setToken(token);
       setCurrentUsername(username);
     } catch (error) {
       console.log(error);
@@ -72,6 +78,7 @@ const Post = ({ post_details }) => {
     fetch('http://192.168.29.210:3001/is-liked', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(req_body)
@@ -87,7 +94,12 @@ const Post = ({ post_details }) => {
     });
     const fetchNoOfComments = async ()=>{
       try {
-        const response = await fetch(`http://192.168.29.210:3001/comments/no-of-comments/${post_details.postID}`);
+        const response = await fetch(`http://192.168.29.210:3001/comments/no-of-comments/${post_details.postID}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      } 
+        );
         const data = await response.json();
         setNoOfComments(data.result[0].count);
       } catch (error) {
@@ -132,6 +144,7 @@ const Post = ({ post_details }) => {
     fetch(`http://192.168.29.210:3001/delete-post/${post_details.postID}`, {
       method: 'DELETE',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     }).then(response => {
@@ -166,6 +179,7 @@ const Post = ({ post_details }) => {
     fetch('http://192.168.29.210:3001/save', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(req_body)
@@ -212,20 +226,28 @@ const Post = ({ post_details }) => {
 </View>
 
       {isExpanded && <Text style={styles.recipe_content}>{post_details.recipe_content}</Text>}
+
       <BottomSheet isVisible={isMenuOpen} containerStyle={styles.bottomSheet}>
-      {currentUsername === post_details.username?
-      <TouchableOpacity onPress={handleDeletePost} style={styles.bottomSheetItem}>
-          <Text style={styles.buttonText}>Delete post</Text>
-        </TouchableOpacity>:<View></View>}
-        {currentUsername != post_details.username?
-          <TouchableOpacity onPress={handleSaveButton} style={styles.bottomSheetItem}>
-            <Text style={styles.buttonText}>Save post</Text>
-          </TouchableOpacity>:<View></View>}
-        <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-      </BottomSheet>
-    </View>
+        <View style={styles.row}>
+  {currentUsername === post_details.username ? (
+    <TouchableOpacity onPress={handleDeletePost} style={styles.bottomSheetItem}>
+      <IconFontAwesome name="trash" size={35} color="#FF0000" style={styles.buttonIconFontAwesome} />
+      <Text style={styles.buttonText}>Delete post</Text>
+    </TouchableOpacity>
+  ) : null}
+  {currentUsername !== post_details.username ? (
+    <TouchableOpacity onPress={handleSaveButton} style={styles.bottomSheetItem}>
+      <IconFontAwesome name="bookmark" size={35} color="#007AFF" style={styles.buttonIconFontAwesome} />
+      <Text style={styles.buttonText}>Save post</Text>
+    </TouchableOpacity>
+  ) : null}
+  <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
+    <IconFontAwesome name="ban" size={35} color="#8B8B8B" style={styles.buttonIconFontAwesome} />
+    <Text style={styles.buttonText}>Cancel</Text>
+  </TouchableOpacity>
+  </View>
+</BottomSheet>
+</View>
   );
   
   
@@ -312,7 +334,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   bottomSheet: {
-    backgroundColor: 'rgba(80, 80, 80, 0.90)',
+    backgroundColor: 'rgba(50, 50, 50, 1)',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -322,33 +344,32 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   bottomSheetItem: {
-    paddingVertical: 10,
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EAEAEA',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-  },
-  deleteButton: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'red',
-    width: '100%',
-    width: '100%',
-  },
-  cancelButton: {
-    fontSize: 20,
-    width: '100%',
-    fontWeight: 'bold',
-    color: '#fff',
-    width: '100%',
+    padding: 10,
+    alignItems: 'center',
+    flexDirection: 'column',
+    borderRadius: 10,
+    marginBottom: 10,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
+    paddingLeft: 10,
+    textAlign: 'center',
   },
+  buttonIcon: {
+    marginLeft: 10,
+    marginRight: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  
   
 });
 

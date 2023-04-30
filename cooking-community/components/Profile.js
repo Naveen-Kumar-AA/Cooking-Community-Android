@@ -6,6 +6,8 @@ import { RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const Profile = () => {
   const [userDetails, setUserDetails] = useState(null);
@@ -14,6 +16,7 @@ const Profile = () => {
   const [noOfPosts, setNoOfPosts] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [token, setToken] = useState("");
   const navigation = useNavigation();
 
   const onRefresh = useCallback(() => {
@@ -22,7 +25,12 @@ const Profile = () => {
     const fetchUserData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`http://192.168.29.210:3001/Homepage/${currentUsername}`);
+        const response = await fetch(`http://192.168.29.210:3001/Homepage/${currentUsername}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
         setUserDetails(data);
       } catch (error) {
@@ -31,7 +39,12 @@ const Profile = () => {
   
       // Fetch the user posts
       try {
-        const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${currentUsername}`);
+        const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${currentUsername}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
         setUserPosts(data);
         setNoOfPosts(data.length);
@@ -48,8 +61,11 @@ const Profile = () => {
   useEffect(()=>{
     const getCurrentUsername = async () => {
       try {
+        const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+        setToken(token);
         const username = await AsyncStorage.getItem('username');
         setCurrentUsername(username);
+        
       } catch (error) {
         console.log(error);
       }
@@ -61,7 +77,12 @@ const Profile = () => {
     const fetchUserData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`http://192.168.29.210:3001/Homepage/${currentUsername}`);
+        const response = await fetch(`http://192.168.29.210:3001/Homepage/${currentUsername}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
         setUserDetails(data);
       } catch (error) {
@@ -70,7 +91,12 @@ const Profile = () => {
   
       // Fetch the user posts
       try {
-        const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${currentUsername}`);
+        const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${currentUsername}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
         setUserPosts(data);
         setNoOfPosts(data.length); 
@@ -145,16 +171,26 @@ const Profile = () => {
             />
           </View>
           <BottomSheet isVisible={isMenuOpen} containerStyle={styles.bottomSheet}>
-      <TouchableOpacity onPress={()=>{navigation.navigate("SavedPosts");setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
-          <Text style={styles.buttonText}>Saved posts</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{navigation.navigate("EditProfile"); setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
-          <Text style={styles.buttonText}>Edit Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-      </BottomSheet>
+  <View style={styles.row}>
+    <TouchableOpacity onPress={()=>{navigation.navigate("SavedPosts");setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
+      <Icon name="bookmark" size={40} color="#fff" style={styles.buttonIcon} />
+      <Text style={styles.buttonText}>Saved</Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={()=>{navigation.navigate("EditProfile"); setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
+      <Icon name="edit" size={40} color="#fff" style={styles.buttonIcon} />
+      <Text style={styles.buttonText}>Edit Profile</Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={()=>{navigation.navigate("Login"); setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
+      <Icon name="sign-out" size={40} color="#fff" style={styles.buttonIcon} />
+      <Text style={styles.buttonText}>Logout</Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
+      <Icon name="ban" size={40} color="#fff" style={styles.buttonIcon} />
+      <Text style={styles.buttonText}>Cancel</Text>
+    </TouchableOpacity>
+  </View>
+</BottomSheet>
+
         </>
       ) : (
         <Text>Loading...</Text>
@@ -256,7 +292,7 @@ const styles = StyleSheet.create({
             color: '#666',
         },
         bottomSheet: {
-          backgroundColor: 'rgba(80, 80, 80, 0.90)',
+          backgroundColor: 'rgba(50, 50, 50, 1)',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           padding: 20,
@@ -265,33 +301,31 @@ const styles = StyleSheet.create({
           bottom: 0,
           left: 0,
           right: 0,
-          alignItems: 'center',
-        },
-        bottomSheetItem: {
-          paddingVertical: 10,
-          width: '100%',
-          borderBottomWidth: 1,
-          borderBottomColor: '#EAEAEA',
           alignItems: 'flex-start',
           flexDirection: 'row',
         },
-        deleteButton: {
-          fontSize: 20,
-          fontWeight: 'bold',
-          color: 'red',
-          width: '100%',
-          width: '100%',
-        },
-        cancelButton: {
-          fontSize: 20,
-          width: '100%',
-          fontWeight: 'bold',
-          color: '#fff',
-          width: '100%',
+        bottomSheetItem: {
+          paddingVertical: 10,
+          // borderBottomWidth: 1,
+          borderBottomColor: '#EAEAEA',
+          alignItems: 'center',
+          flexDirection: 'column',
+        
         },
         buttonText: {
-          fontSize: 18,
+          fontSize: 15,
           color: '#fff',
+          paddingTop: 10,
+          textAlign: 'center',
+        },
+        buttonIcon: {
+          // marginBottom: 10,
+        },
+        row: {
+          flexDirection: 'row',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'space-around',
         },
         
       });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,21 +8,33 @@ import {
   StyleSheet,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Search({navigation}) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  const [token,setToken] = useState("");
 
-  function randomHexColor() {
-    // Generate a random color code in hexadecimal format
-    const hexCode = Math.floor(Math.random() * 16777215).toString(16);
-    // Pad the code with leading zeros to make sure it has 6 digits
-    return "#" + "0".repeat(6 - hexCode.length) + hexCode;
-  }
+  useEffect(()=>{
+    const getToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+        setToken(token);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getToken();
+  },[])
+
 
   const handleSearch = () => {
-    fetch(`http://192.168.29.210:3001/search/${query}`)
+    fetch(`http://192.168.29.210:3001/search/${query}`,{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then((response) => response.json())
       .then((data) => setResults(data))
       .catch((error) => console.error(error));
@@ -44,14 +56,6 @@ function Search({navigation}) {
     );
   };
 
-  // const renderAvatar = (username) => {
-  //   const color = randomHexColor();
-  //   return (
-  //     <View style={[styles.avatar, { backgroundColor: color }]}>
-  //       <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
-  //     </View>
-  //   );
-  // };
   const avatarBackgroundColors = [
     '#FF7F50',
     '#FFD700',

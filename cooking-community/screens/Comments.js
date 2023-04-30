@@ -23,10 +23,28 @@ const Comments = ({ route }) => {
 
 
   useEffect(() => {
+    // const fetchCommentData = async () => {
+    //   // Fetch the user details
+    //   try {
+    //     const response = await fetch(`http://192.168.29.210:3001/comments/${postId}`);
+    //     const data = await response.json();
+    //     console.log(data);
+    //     setComments(data.result);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+    
     const fetchCommentData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`http://192.168.29.210:3001/comments/${postId}`);
+        const token = await AsyncStorage.getItem('token');
+    
+        const response = await fetch(`http://192.168.29.210:3001/comments/${postId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         const data = await response.json();
         console.log(data);
         setComments(data.result);
@@ -35,30 +53,55 @@ const Comments = ({ route }) => {
       }
     };
     
+
     fetchCommentData();
   }, [commentText]);
 
-  const handleCommentButton = ()=>{
+  // const handleCommentButton = ()=>{
+  //   const req_body = {
+  //       postID : postId,
+  //       userID : currentUsername,
+  //       comment: commentText        
+  //   }
+  //   fetch('http://192.168.29.210:3001/comments  ', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(req_body)
+  //     })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       setCommentText("");
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
+  const handleCommentButton = async () => {
+    const token = await AsyncStorage.getItem('token');
     const req_body = {
-        postID : postId,
-        userID : currentUsername,
-        comment: commentText        
-    }
-    fetch('http://192.168.29.210:3001/comments  ', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(req_body)
-      })
+      postID: postId,
+      userID: currentUsername,
+      comment: commentText,
+    };
+    fetch('http://192.168.29.210:3001/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(req_body),
+    })
       .then(response => response.json())
       .then(data => {
-        setCommentText("");
+        setCommentText('');
       })
       .catch(error => {
         console.log(error);
       });
-  }
+  };
+  
 
   return (
     <View style={styles.container}>

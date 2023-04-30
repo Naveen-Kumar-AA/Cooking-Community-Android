@@ -10,12 +10,14 @@ const NewPost = () => {
   const [caption, setCaption] = useState('');
   const [recipeContent, setRecipeContent] = useState('');
   const [currentUsername, setCurrentUsername] = useState('');
-
+  const [token, setToken] = useState("");
 
   useEffect(()=>{
     const getCurrentUsername = async () => {
       try {
         const username = await AsyncStorage.getItem('username');
+        const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+        setToken(token);
         setCurrentUsername(username);
       } catch (error) {
         console.log(error);
@@ -25,7 +27,7 @@ const NewPost = () => {
   },[])
 
 
-  const handleSubmit = () => {
+  const handleSubmit =  () => {
     const postBody = {
       username: currentUsername,
       title,
@@ -38,6 +40,7 @@ const NewPost = () => {
     fetch('http://192.168.29.210:3001/new-post', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(postBody)
@@ -61,7 +64,6 @@ const NewPost = () => {
         console.error(error);
       });
   };
-  
 
   return (
     <View style={styles.container}>

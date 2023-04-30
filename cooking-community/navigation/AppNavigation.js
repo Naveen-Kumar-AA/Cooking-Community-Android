@@ -21,11 +21,12 @@ const AppNavigation = () => {
           headerTitle: 'Login',
           headerRight: () => (
             <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('SignUp')}
-            >
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+  style={styles.button}
+  onPress={() => navigation.navigate('SignUp')}
+>
+  <Text style={styles.buttonText}>Sign Up</Text>
+</TouchableOpacity>
+
           ),
         })}
       />
@@ -41,16 +42,17 @@ const AppNavigation = () => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#0066cc',
     padding: 10,
     borderRadius: 5,
-
+    borderWidth: 0,
+    borderColor: 'black',
   },
   buttonText: {
-    color: '#fff',
-    fontWeight:'bold',
+    color: 'black',
+    fontWeight: 'bold',
     fontSize: 14,
-  },
+  }
+  
 });
 
 export default AppNavigation;

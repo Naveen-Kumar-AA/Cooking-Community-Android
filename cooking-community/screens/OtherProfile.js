@@ -10,7 +10,6 @@ const OtherProfile = ({ route }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentUsername, setCurrentUsername] = useState("");
   const [noOfPosts, setNoOfPosts] = useState(0);
- 
   
   useEffect(()=>{
     const getCurrentUsername = async () => {
@@ -26,38 +25,99 @@ const OtherProfile = ({ route }) => {
 
   useEffect(()=>{
 
-        const fetchUserData = async () => {
+        // const fetchUserData = async () => {
           
-              // Fetch the user details
-              try {
-                const response = await fetch(`http://192.168.29.210:3001/Homepage/${user.username}`);
-                const data = await response.json();
-                setUserDetails(data);
-                setFollowerCount(data.no_of_followers);
-              } catch (error) {
-                console.error(error);
-              }
-              // Fetch the user posts
-              try {
-                const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${user.username}`);
-                const data = await response.json();
-                setUserPosts(data);
-                setNoOfPosts(data.length);
-              } catch (error) {
-                console.error(error);
-              }
+        //       // Fetch the user details
+        //       try {
+        //         const response = await fetch(`http://192.168.29.210:3001/Homepage/${user.username}`);
+        //         const data = await response.json();
+        //         setUserDetails(data);
+        //         setFollowerCount(data.no_of_followers);
+        //       } catch (error) {
+        //         console.error(error);
+        //       }
+        //       // Fetch the user posts
+        //       try {
+        //         const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${user.username}`);
+        //         const data = await response.json();
+        //         setUserPosts(data);
+        //         setNoOfPosts(data.length);
+        //       } catch (error) {
+        //         console.error(error);
+        //       }
+        // }
+        const fetchUserData = async () => {
+          // Get token from AsyncStorage
+          const token = await AsyncStorage.getItem('token');
+        
+          // Fetch the user details
+          try {
+            const response = await fetch(`http://192.168.29.210:3001/Homepage/${user.username}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            const data = await response.json();
+            setUserDetails(data);
+            // setFollowerCount(data.no_of_followers);
+          } catch (error) {
+            console.error(error);
+          }
+        
+          // Fetch the user posts
+          try {
+            const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${user.username}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            const data = await response.json();
+            setUserPosts(data);
+            setNoOfPosts(data.length);
+          } catch (error) {
+            console.error(error);
+          }
         }
         
         fetchUserData();
   },[isFollowing,currentUsername])
 
   useEffect(()=>{
+    // const fetchIsFollowing = async () => {
+    //   try {
+    //     const response = await fetch(`http://192.168.29.210:3001/is-following`,{
+    //       method : 'post',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify({
+    //         username: user.username,
+    //         followername: currentUsername
+    //       }),
+    //     });
+    //     const data = await response.json();
+    //     console.log(user.username);
+    //     console.log(currentUsername);
+    //     console.log(data);
+    //     if(data.success.isfollowing){
+    //       setIsFollowing(true);
+    //     }
+    //     else{
+    //       setIsFollowing(false);
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+    
     const fetchIsFollowing = async () => {
       try {
+        const token = await AsyncStorage.getItem('token');
         const response = await fetch(`http://192.168.29.210:3001/is-following`,{
           method : 'post',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             username: user.username,
@@ -79,6 +139,7 @@ const OtherProfile = ({ route }) => {
       }
     };
     
+
     fetchIsFollowing();
   },[currentUsername])
 
@@ -102,35 +163,62 @@ const OtherProfile = ({ route }) => {
     );
   };
 
-  const toggleFollowClick = () => {
-    fetch("http://192.168.29.210:3001/toggle-follow", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        otherUsername: userDetails.username,
-        username: currentUsername,
-        isFollowing: !isFollowing
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log("data from backend: ", data)
-      if(data.success){
-        console.log("inside if")
+  // const toggleFollowClick = () => {
+  //   fetch("http://192.168.29.210:3001/toggle-follow", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       otherUsername: userDetails.username,
+  //       username: currentUsername,
+  //       isFollowing: !isFollowing
+  //     })
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     console.log("data from backend: ", data)
+  //     if(data.success){
+  //       console.log("inside if")
+  //       setIsFollowing(!isFollowing); // Update the state with the response from the backend
+  //       console.log(isFollowing);
+  //     }
+  //     else{
+  //       console.log("Error following or unfollowing")
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.error(error);
+  //   });
+  // };
+  
+  const toggleFollowClick = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await fetch('http://192.168.29.210:3001/toggle-follow', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        },
+        body: JSON.stringify({
+          otherUsername: userDetails.username,
+          username: currentUsername,
+          isFollowing: !isFollowing
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
         setIsFollowing(!isFollowing); // Update the state with the response from the backend
-        console.log(isFollowing);
+      } else {
+        console.log('Error following or unfollowing');
       }
-      else{
-        console.log("Error following or unfollowing")
-      }
-    })
-    .catch(error => {
+    } catch (error) {
       console.error(error);
-    });
+    }
   };
   
+
   return (
     <ScrollView style={styles.container}>
       {userDetails ? (

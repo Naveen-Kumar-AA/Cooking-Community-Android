@@ -30,9 +30,30 @@ const SavedPosts = () => {
         fetchPosts();
     },[currentUsername]);
   
+    // const fetchPosts = async () => {
+    //   try {
+    //     const response = await fetch(`http://192.168.29.210:3001/get-saved-posts/${currentUsername}`);
+    //     const data = await response.json();
+    //     console.log(data);
+    //     const data1 = data.resultArray;
+    //     console.log(data1);
+    //     setPosts([...data1]); // create new array with updated data
+    //   } catch (error) {
+    //     console.error(error);
+    //   } finally {
+    //     setRefreshing(false); // set refreshing to false after fetch completes
+    //   }
+    // };
+    
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`http://192.168.29.210:3001/get-saved-posts/${currentUsername}`);
+        const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+        const response = await fetch(`http://192.168.29.210:3001/get-saved-posts/${currentUsername}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Add token to the header
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
         console.log(data);
         const data1 = data.resultArray;
@@ -45,7 +66,6 @@ const SavedPosts = () => {
       }
     };
     
-
 
     const renderItem = ({ item }) => {
       return (
