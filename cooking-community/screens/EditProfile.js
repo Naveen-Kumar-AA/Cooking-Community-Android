@@ -33,7 +33,7 @@ export default function EditProfile() {
       token
     };
     console.log(req_body);
-    const response = await fetch('http://192.168.29.210:3001/edit-profile', {
+    const response = await fetch('https://cooking-community-server.onrender.com/edit-profile', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

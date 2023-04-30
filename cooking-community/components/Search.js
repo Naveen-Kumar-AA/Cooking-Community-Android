@@ -29,7 +29,7 @@ function Search({navigation}) {
 
 
   const handleSearch = () => {
-    fetch(`http://192.168.29.210:3001/search/${query}`,{
+    fetch(`https://cooking-community-server.onrender.com/search/${query}`,{
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

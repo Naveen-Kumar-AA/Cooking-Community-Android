@@ -87,7 +87,7 @@ const Comments = ({ route }) => {
       comment: commentText,
     };
     console.log(commentText);
-    fetch('http://192.168.29.210:3001/comments', {
+    fetch('https://cooking-community-server.onrender.com/comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -36,7 +36,7 @@ const Post = ({ post_details }) => {
       likeStatus: !isLiked
     };
 
-    fetch('http://192.168.29.210:3001/update-like-status', {
+    fetch('https://cooking-community-server.onrender.com/update-like-status', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -76,7 +76,7 @@ const Post = ({ post_details }) => {
       userID: currentUsername
     };
 
-    fetch('http://192.168.29.210:3001/is-liked', {
+    fetch('https://cooking-community-server.onrender.com/is-liked', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -95,7 +95,7 @@ const Post = ({ post_details }) => {
     });
     const fetchNoOfComments = async ()=>{
       try {
-        const response = await fetch(`http://192.168.29.210:3001/comments/no-of-comments/${post_details.postID}`,{
+        const response = await fetch(`https://cooking-community-server.onrender.com/comments/no-of-comments/${post_details.postID}`,{
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -111,7 +111,7 @@ const Post = ({ post_details }) => {
     fetchNoOfComments()
     const fetchIsSaved = async () => {
       try {
-        const response = await fetch(`http://192.168.29.210:3001/is-saved/${currentUsername}/${post_details.postID}`, {
+        const response = await fetch(`https://cooking-community-server.onrender.com/is-saved/${currentUsername}/${post_details.postID}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -172,7 +172,7 @@ const Post = ({ post_details }) => {
   
 
   const handleDeletePost = async ()=>{
-    fetch(`http://192.168.29.210:3001/delete-post/${post_details.postID}`, {
+    fetch(`https://cooking-community-server.onrender.com/delete-post/${post_details.postID}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -207,7 +207,7 @@ const Post = ({ post_details }) => {
       userID: currentUsername
     };
     if(!isSaved) {
-      fetch('http://192.168.29.210:3001/save', {
+      fetch('https://cooking-community-server.onrender.com/save', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -228,7 +228,7 @@ const Post = ({ post_details }) => {
       }); 
   }  
   else {
-    fetch('http://192.168.29.210:3001/unsave', {
+    fetch('https://cooking-community-server.onrender.com/unsave', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

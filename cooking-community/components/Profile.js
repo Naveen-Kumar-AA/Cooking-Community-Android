@@ -25,7 +25,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`http://192.168.29.210:3001/Homepage/${currentUsername}`,{
+        const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ const Profile = () => {
   
       // Fetch the user posts
       try {
-        const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${currentUsername}`,{
+        const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`http://192.168.29.210:3001/Homepage/${currentUsername}`,{
+        const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ const Profile = () => {
   
       // Fetch the user posts
       try {
-        const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${currentUsername}`,{
+        const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

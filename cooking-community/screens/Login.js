@@ -10,7 +10,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.29.210:3001/check-user-password', {
+      const response = await fetch('https://cooking-community-server.onrender.com/check-user-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

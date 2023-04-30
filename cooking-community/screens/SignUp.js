@@ -34,7 +34,7 @@ const handleSignUp = async () => {
   }
 
   // Send sign up request to server
-  const response = await fetch('http://192.168.29.210:3001/do-signup', {
+  const response = await fetch('https://cooking-community-server.onrender.com/do-signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

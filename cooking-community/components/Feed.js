@@ -20,7 +20,7 @@ const Feed = () => {
   const fetchPosts = async () => {
     try {
       const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-      const response = await fetch(`http://192.168.29.210:3001/posts/${mealFilter}`, {
+      const response = await fetch(`https://cooking-community-server.onrender.com/posts/${mealFilter}`, {
         headers: {
           'Authorization': `Bearer ${token}`, // Include token in Authorization header
           'Content-Type': 'application/json'
