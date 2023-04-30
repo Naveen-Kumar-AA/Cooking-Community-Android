@@ -56,15 +56,28 @@ function Search({navigation}) {
     );
   };
 
+  
   const avatarBackgroundColors = [
-    '#FF7F50',
-    '#FFD700',
-    '#00FF7F',
-    '#00BFFF',
-    '#6A5ACD',
-    '#FF69B4',
-    '#8B008B',
-    '#FF4500'
+    '#FF7F50', // Coral
+    '#FFD700', // Gold
+    '#00FF7F', // Spring Green
+    '#00BFFF', // Deep Sky Blue
+    '#6A5ACD', // Slate Blue
+    '#FF69B4', // Hot Pink
+    '#8B008B', // Dark Magenta
+    '#FF6347', // Tomato
+    '#9370DB', // Medium Purple
+    '#00CED1', // Dark Turquoise
+    '#FFA07A', // Light Salmon
+    '#32CD32', // Lime Green
+    '#FF00FF', // Magenta
+    '#B22222', // Fire Brick
+    '#FF1493', // Deep Pink
+    '#7B68EE', // Medium Slate Blue
+    '#228B22', // Forest Green
+    '#4169E1', // Royal Blue
+    '#DC143C', // Crimson
+    '#9932CC' // Dark Orchid
   ];
   
   

@@ -79,12 +79,14 @@ const Comments = ({ route }) => {
   //     });
   // }
   const handleCommentButton = async () => {
+    console.log("Hello")
     const token = await AsyncStorage.getItem('token');
     const req_body = {
       postID: postId,
       userID: currentUsername,
       comment: commentText,
     };
+    console.log(commentText);
     fetch('http://192.168.29.210:3001/comments', {
       method: 'POST',
       headers: {

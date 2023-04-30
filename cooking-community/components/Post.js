@@ -16,6 +16,7 @@ const Post = ({ post_details }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [noOfComments, setNoOfComments] = useState(0);
   const [token,setToken] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
   const navigation = useNavigation();
 
   const toggleExpand = () => {
@@ -106,24 +107,54 @@ const Post = ({ post_details }) => {
         console.error(error);
       }
     }
+    
     fetchNoOfComments()
+    const fetchIsSaved = async () => {
+      try {
+        const response = await fetch(`http://192.168.29.210:3001/is-saved/${currentUsername}/${post_details.postID}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const result = await response.json();
+        setIsSaved(result.isSaved);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchIsSaved();
+  
   }, [currentUsername, post_details.postID]);
 
   useEffect(() => {
     setIsLiked(serverLikeStatus);
-  }, [serverLikeStatus]);
+  }, [serverLikeStatus, isSaved]);
 
 
   const avatarBackgroundColors = [
-    '#FF7F50',
-    '#FFD700',
-    '#00FF7F',
-    '#00BFFF',
-    '#6A5ACD',
-    '#FF69B4',
-    '#8B008B',
-    '#FF4500'
+    '#FF7F50', // Coral
+    '#FFD700', // Gold
+    '#00FF7F', // Spring Green
+    '#00BFFF', // Deep Sky Blue
+    '#6A5ACD', // Slate Blue
+    '#FF69B4', // Hot Pink
+    '#8B008B', // Dark Magenta
+    '#FF6347', // Tomato
+    '#9370DB', // Medium Purple
+    '#00CED1', // Dark Turquoise
+    '#FFA07A', // Light Salmon
+    '#32CD32', // Lime Green
+    '#FF00FF', // Magenta
+    '#B22222', // Fire Brick
+    '#FF1493', // Deep Pink
+    '#7B68EE', // Medium Slate Blue
+    '#228B22', // Forest Green
+    '#4169E1', // Royal Blue
+    '#DC143C', // Crimson
+    '#9932CC' // Dark Orchid
   ];
+  
   
   
   const renderAvatar = (username) => {
@@ -175,8 +206,29 @@ const Post = ({ post_details }) => {
       postID: post_details.postID,
       userID: currentUsername
     };
-
-    fetch('http://192.168.29.210:3001/save', {
+    if(!isSaved) {
+      fetch('http://192.168.29.210:3001/save', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req_body)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.message) {
+          // setIsMenuOpen(false);
+          setIsSaved(!isSaved);
+          console.log(data.message);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      }); 
+  }  
+  else {
+    fetch('http://192.168.29.210:3001/unsave', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -187,13 +239,15 @@ const Post = ({ post_details }) => {
     .then(response => response.json())
     .then(data => {
       if(data.message) {
-        setIsMenuOpen(false);
+        // setIsMenuOpen(false);
+        setIsSaved(!isSaved);
         console.log(data.message);
       }
     })
     .catch(error => {
       console.log(error);
     });
+  }
   }
 
   return (
@@ -236,11 +290,15 @@ const Post = ({ post_details }) => {
     </TouchableOpacity>
   ) : null}
   {currentUsername !== post_details.username ? (
-    <TouchableOpacity onPress={handleSaveButton} style={styles.bottomSheetItem}>
-      <IconFontAwesome name="bookmark" size={35} color="#007AFF" style={styles.buttonIconFontAwesome} />
-      <Text style={styles.buttonText}>Save post</Text>
-    </TouchableOpacity>
-  ) : null}
+        <TouchableOpacity onPress={handleSaveButton} style={styles.bottomSheetItem}>
+          {isSaved ? (
+            <IconFontAwesome name="bookmark" size={35} color="#007AFF" style={styles.buttonIconFontAwesome} />
+          ) : (
+            <Icon name="bookmark" size={35} color="#007AFF" style={styles.buttonIcon} />
+          )}
+          <Text style={styles.buttonText}>{isSaved ? 'Unsave post' : 'Save post'}</Text>
+        </TouchableOpacity>
+      ) : null}
   <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
     <IconFontAwesome name="ban" size={35} color="#8B8B8B" style={styles.buttonIconFontAwesome} />
     <Text style={styles.buttonText}>Cancel</Text>

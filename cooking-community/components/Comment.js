@@ -3,14 +3,24 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const Comment = ({ postID, userID, comment }) => {
   const avatarBackgroundColors = [
-    '#F94144',
-    '#F3722C',
-    '#F8961E',
-    '#F9C74F',
-    '#90BE6D',
-    '#43AA8B',
-    '#577590',
-    '#264653'
+    '#FF7F50', // Coral
+    '#FFD700', // Gold
+    '#00FF7F', // Spring Green
+    '#00BFFF', // Deep Sky Blue
+    '#6A5ACD', // Slate Blue
+    '#FF69B4', // Hot Pink
+    '#8B008B', // Dark Magenta
+    '#FF6347', // Tomato
+    '#9370DB', // Medium Purple
+    '#00CED1', // Dark Turquoise
+    '#FF00FF', // Magenta
+    '#B22222', // Fire Brick
+    '#FF1493', // Deep Pink
+    '#7B68EE', // Medium Slate Blue
+    '#228B22', // Forest Green
+    '#4169E1', // Royal Blue
+    '#DC143C', // Crimson
+    '#9932CC' // Dark Orchid
   ];
 
   const getInitials = (name) => {

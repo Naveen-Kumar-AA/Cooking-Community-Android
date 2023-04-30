@@ -130,7 +130,16 @@ const Profile = () => {
     );
   };
 
-
+  const logout = async () => {
+    try {
+      // Remove the token from AsyncStorage
+      await AsyncStorage.removeItem('token');
+      // Redirect the user to the login screen
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (<>
     <ScrollView style={styles.container}
@@ -180,7 +189,7 @@ const Profile = () => {
       <Icon name="edit" size={40} color="#fff" style={styles.buttonIcon} />
       <Text style={styles.buttonText}>Edit Profile</Text>
     </TouchableOpacity>
-    <TouchableOpacity onPress={()=>{navigation.navigate("Login"); setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
+    <TouchableOpacity onPress={()=>{logout(); setIsMenuOpen(false)}} style={styles.bottomSheetItem}>
       <Icon name="sign-out" size={40} color="#fff" style={styles.buttonIcon} />
       <Text style={styles.buttonText}>Logout</Text>
     </TouchableOpacity>
