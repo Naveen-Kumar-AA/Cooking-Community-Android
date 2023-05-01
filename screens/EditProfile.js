@@ -3,12 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-export default function EditProfile() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [bio, setBio] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+export default function EditProfile({route}) {
+  const profile = route.params;
+  const [firstName, setFirstName] = useState(profile.first_name);
+  const [lastName, setLastName] = useState(profile.last_name);
+  const [bio, setBio] = useState(profile.bio);
+  const [email, setEmail] = useState(profile.email);
+  const [phoneNumber, setPhoneNumber] = useState(profile.phn_number);
   const [token, setToken] = useState('');
   const [username, setUsername] = useState('');
   const navigation = useNavigation();
@@ -33,7 +34,7 @@ export default function EditProfile() {
       token
     };
     console.log(req_body);
-    const response = await fetch('https://cooking-community-server.onrender.com/edit-profile', {
+    const response = await fetch('http://192.168.29.210:3001/edit-profile', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

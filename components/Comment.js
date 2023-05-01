@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const Comment = ({ postID, userID, comment }) => {
+  console.log(userID);
   const avatarBackgroundColors = [
     '#FF7F50', // Coral
     '#FFD700', // Gold

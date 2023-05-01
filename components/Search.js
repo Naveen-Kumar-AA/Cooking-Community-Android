@@ -29,7 +29,7 @@ function Search({navigation}) {
 
 
   const handleSearch = () => {
-    fetch(`https://cooking-community-server.onrender.com/search/${query}`,{
+    fetch(`http://192.168.29.210:3001/search/${query.toLowerCase()}`,{
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -97,8 +97,7 @@ function Search({navigation}) {
         <View style={styles.searchBar}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search users..."
-            value={query}
+            placeholder="Search accounts..."
             onChangeText={setQuery}
           />
           <TouchableOpacity onPress={handleSearch} style={styles.searchButton}>

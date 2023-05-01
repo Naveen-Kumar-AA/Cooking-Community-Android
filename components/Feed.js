@@ -10,6 +10,7 @@ const Feed = () => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    setMealFilter('');
     fetchPosts();
   }, []);
 
@@ -20,7 +21,7 @@ const Feed = () => {
   const fetchPosts = async () => {
     try {
       const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-      const response = await fetch(`https://cooking-community-server.onrender.com/posts/${mealFilter}`, {
+      const response = await fetch(`http://192.168.29.210:3001/posts/${mealFilter}`, {
         headers: {
           'Authorization': `Bearer ${token}`, // Include token in Authorization header
           'Content-Type': 'application/json'
@@ -60,22 +61,22 @@ const Feed = () => {
           <Text style={mealFilter === '' ? styles.activeFilterText : styles.filterText}>All</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => filterByMeal('breakfast')}>
-          <Text style={mealFilter === 'Breakfast' ? styles.activeFilterText : styles.filterText}>Breakfast</Text>
+          <Text style={mealFilter === 'breakfast' ? styles.activeFilterText : styles.filterText}>Breakfast</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => filterByMeal('lunch')}>
-          <Text style={mealFilter === 'Lunch' ? styles.activeFilterText : styles.filterText}>Lunch</Text>
+          <Text style={mealFilter === 'lunch' ? styles.activeFilterText : styles.filterText}>Lunch</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => filterByMeal('snacks')}>
-          <Text style={mealFilter === 'Snacks' ? styles.activeFilterText : styles.filterText}>Snacks</Text>
+          <Text style={mealFilter === 'snacks' ? styles.activeFilterText : styles.filterText}>Snacks</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => filterByMeal('dessert')}>
-          <Text style={mealFilter === 'Dessert' ? styles.activeFilterText : styles.filterText}>Dessert</Text>
+          <Text style={mealFilter === 'dessert' ? styles.activeFilterText : styles.filterText}>Dessert</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => filterByMeal('dinner')}>
-          <Text style={mealFilter === 'Dinner' ? styles.activeFilterText : styles.filterText}>Dinner</Text>
+          <Text style={mealFilter === 'dinner' ? styles.activeFilterText : styles.filterText}>Dinner</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => filterByMeal('drinks')}>
-          <Text style={mealFilter === 'Drinks' ? styles.activeFilterText : styles.filterText}>Drinks</Text>
+          <Text style={mealFilter === 'drinks' ? styles.activeFilterText : styles.filterText}>Drinks</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -124,9 +125,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginHorizontal: 10,
-    color: '#333',
-    textDecorationLine: 'underline',
+    color: '#000',
   },
+
   postList: {
     flex: 1,
     backgroundColor: '#fff',

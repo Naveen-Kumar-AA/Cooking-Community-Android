@@ -36,7 +36,7 @@ const Post = ({ post_details }) => {
       likeStatus: !isLiked
     };
 
-    fetch('https://cooking-community-server.onrender.com/update-like-status', {
+    fetch('http://192.168.29.210:3001/update-like-status', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -76,7 +76,7 @@ const Post = ({ post_details }) => {
       userID: currentUsername
     };
 
-    fetch('https://cooking-community-server.onrender.com/is-liked', {
+    fetch('http://192.168.29.210:3001/is-liked', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -95,7 +95,7 @@ const Post = ({ post_details }) => {
     });
     const fetchNoOfComments = async ()=>{
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/comments/no-of-comments/${post_details.postID}`,{
+        const response = await fetch(`http://192.168.29.210:3001/comments/no-of-comments/${post_details.postID}`,{
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -111,7 +111,7 @@ const Post = ({ post_details }) => {
     fetchNoOfComments()
     const fetchIsSaved = async () => {
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/is-saved/${currentUsername}/${post_details.postID}`, {
+        const response = await fetch(`http://192.168.29.210:3001/is-saved/${currentUsername}/${post_details.postID}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -161,18 +161,24 @@ const Post = ({ post_details }) => {
     const colorIndex = Math.floor(Math.random() * avatarBackgroundColors.length);
     const color = avatarBackgroundColors[colorIndex];
     return (
+    <TouchableOpacity onPress={() => {
+      if(username !== currentUsername){
+        navigation.navigate("OtherProfile", {user : {username}})
+      }
+    }}>
       <View style={styles.userContainer}>
         <View style={[styles.avatar, { backgroundColor: color }]}>
           <Text style={styles.avatarText}>{username.charAt(0).toUpperCase()}</Text>
         </View>
         <Text style={styles.username}>{post_details.username}</Text>
       </View>
+    </TouchableOpacity>
     );
   };
   
 
   const handleDeletePost = async ()=>{
-    fetch(`https://cooking-community-server.onrender.com/delete-post/${post_details.postID}`, {
+    fetch(`http://192.168.29.210:3001/delete-post/${post_details.postID}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -207,7 +213,7 @@ const Post = ({ post_details }) => {
       userID: currentUsername
     };
     if(!isSaved) {
-      fetch('https://cooking-community-server.onrender.com/save', {
+      fetch('http://192.168.29.210:3001/save', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -228,7 +234,7 @@ const Post = ({ post_details }) => {
       }); 
   }  
   else {
-    fetch('https://cooking-community-server.onrender.com/unsave', {
+    fetch('http://192.168.29.210:3001/unsave', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -7,34 +7,59 @@ const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    setIsLoading(true);
+    setErrorMessage('');
+    if (!username) {
+      setErrorMessage('Please enter a username.');
+      setIsLoading(false);
+      return;
+    }
+    if (!password) {
+      setErrorMessage('Please enter a password.');
+      setIsLoading(false);
+      return;
+    }
     try {
-      const response = await fetch('https://cooking-community-server.onrender.com/check-user-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
+      const response = await Promise.race([
+        fetch('http://192.168.29.210:3001/check-user-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
         }),
-      });
+        new Promise(resolve => setTimeout(() => resolve({ timeout: true }), 10000))
+      ]);
+      if (response.timeout) {
+        setErrorMessage('An unexpected error occurred, please try again.');
+        setIsLoading(false);
+        return;
+      }
       const data = await response.json();
       console.log(data);
-      if (data.result.length !== 0) {
+      if (data.result.msg) {
         await AsyncStorage.setItem('token', data.token);
         await AsyncStorage.setItem('username', username);
         setUsername("");
         setPassword("");
         setErrorMessage("");
+        setIsLoading(false);
         navigation.navigate('Home');
-      } else {
+      } 
+      if(!data.result.msg) {
         setErrorMessage('Enter a valid username and password.');
+        setIsLoading(false);
       }
     } catch (error) {
       setErrorMessage('An unexpected error occurred, please try again.');
       console.log(error);
+      setIsLoading(false);
     }
   };
   
@@ -56,12 +81,17 @@ const Login = ({ navigation }) => {
         onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text style={styles.buttonText}>Login</Text>
+        )}
       </TouchableOpacity>
       <Text style={styles.errorText}>{errorMessage}</Text>
     </View>
   );
 };
+
 
 Login.navigationOptions = ({ navigation }) => {
   return {

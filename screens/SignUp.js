@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({ navigation }) => {
@@ -10,6 +10,8 @@ const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [C_password, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const storeUsername = async (username) => {
     try {
@@ -18,70 +20,128 @@ const SignUp = ({ navigation }) => {
       console.log(error);
     }
   }
-const storeToken = async (token) => {
-  try {
-    await AsyncStorage.setItem('token', token);
-  } catch (error) {
-    console.log(error);
-  }
-}
 
-const handleSignUp = async () => {
-  // Check if password and confirm password match
-  if (password !== C_password) {
-    console.log('Passwords do not match');
-    return;
+  const storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('token', token);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  // Send sign up request to server
-  const response = await fetch('https://cooking-community-server.onrender.com/do-signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      username,
-      First_name,
-      Last_name,
-      phn_number,
-      email,
-      password,
-      C_password
-    }),
-  })
-  const data = await response.json();
-  console.log(data);
-  if(data){
-    if (data.token) {
-          storeUsername(username);
-          storeToken(data.token);
-          navigation.navigate('Home');
-        } else {
-          console.log('Cannot create account');
-        }
-  }
-  else{
-    console.log(data);
-  }
-  // .then(response => {
-  //   console.log(response);
-  //   response.json()
-  // })
-  // .then(data => {
-  //   console.log(data);
-  //   if (data.token) {
-  //     storeUsername(username);
-  //     storeToken(data.token);
-  //     navigation.navigate('Home');
-  //   } else {
-  //     console.log('Cannot create account');
+  // const handleSignUp = async () => {
+  //   setLoading(true);
+  //   setErrorMessage('');
+
+  //   // Check if password and confirm password match
+  //   if (password !== C_password) {
+  //     setErrorMessage('Passwords do not match');
+  //     setLoading(false);
+  //     return;
   //   }
-  // })
-  // .catch(error => {
-  //   console.log(error);
-  // });
-};
 
+  //   // Send sign up request to server
+  //   const response = await fetch('http://192.168.29.210:3001/do-signup', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       username,
+  //       First_name,
+  //       Last_name,
+  //       phn_number,
+  //       email,
+  //       password,
+  //       C_password
+  //     }),
+  //   })
+  //   const data = await response.json();
+  //   setLoading(false);
+  //   console.log(data);
+  //   if (data) {
+  //     if (data.token) {
+  //       storeUsername(username);
+  //       storeToken(data.token);
+  //       setErrorMessage("");
+  //       navigation.navigate('Home');
+  //     } else {
+  //       setErrorMessage(data);
+  //     }
+  //   } else {
+  //     setErrorMessage("Unexpected error. Please try again later.");
+  //   }
+  // };
+  const handleSignUp = async () => {
+    setLoading(true);
+    setErrorMessage('');
+  
+    // Validate inputs
+    if (!username || !First_name || !Last_name || !phn_number || !email || !password || !C_password) {
+      setErrorMessage('All fields are required');
+      setLoading(false);
+      return;
+    }
+    if (username !== username.toLowerCase()) {
+      setErrorMessage('Username must be in all lowercase letters');
+      setLoading(false);
+      return;
+    }
+    if (!/^\d{10}$/.test(phn_number)) {
+      setErrorMessage('Phone number must be 10 digits long');
+      setLoading(false);
+      return;
+    }
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
+      setErrorMessage('Email is not valid');
+      setLoading(false);
+      return;
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,}$/.test(password)) {
+      setErrorMessage('Password must contain at least one uppercase letter, one lowercase letter, one numeric value, no special characters and minimum of 7 characters.');
+      setLoading(false);
+      return;
+    }
+    if (password !== C_password) {
+      setErrorMessage('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+  
+    // Send sign up request to server
+    const response = await fetch('http://192.168.29.210:3001/do-signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        First_name,
+        Last_name,
+        phn_number,
+        email,
+        password,
+        C_password
+      }),
+    })
+    const data = await response.json();
+    setLoading(false);
+    console.log(data);
+    if (data) {
+      if (data.token) {
+        storeUsername(username);
+        storeToken(data.token);
+        setErrorMessage("");
+        navigation.navigate('Home');
+      } else {
+        setErrorMessage(data);
+      }
+    } else {
+      setErrorMessage("Unexpected error. Please try again later.");
+    }
+  };
+  
+  
   return (
     <View style={styles.container}>
       <TextInput
@@ -134,11 +194,20 @@ const handleSignUp = async () => {
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      <Text style={styles.errorText}>{errorMessage}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSignUp}
+        disabled={loading}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text style={styles.buttonText}>Sign Up</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -168,6 +237,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight:'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 10,
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
 

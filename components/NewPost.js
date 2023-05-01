@@ -11,6 +11,7 @@ const NewPost = () => {
   const [recipeContent, setRecipeContent] = useState('');
   const [currentUsername, setCurrentUsername] = useState('');
   const [token, setToken] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(()=>{
     const getCurrentUsername = async () => {
@@ -28,6 +29,17 @@ const NewPost = () => {
 
 
   const handleSubmit =  () => {
+    if (!title || !meal || !cuisine || !caption || !recipeContent) {
+      let emptyField = '';
+      if (!title) emptyField = 'Title';
+      else if (!meal) emptyField = 'Meal';
+      else if (!cuisine) emptyField = 'Cuisine';
+      else if (!caption) emptyField = 'Caption';
+      else if (!recipeContent) emptyField = 'Recipe';
+  
+      setErrorMessage(`${emptyField} cannot be empty`);
+      return;
+    }
     const postBody = {
       username: currentUsername,
       title,
@@ -36,8 +48,7 @@ const NewPost = () => {
       caption,
       recipe: recipeContent
     };
-    console.log(postBody);
-    fetch('https://cooking-community-server.onrender.com/new-post', {
+    fetch('http://192.168.29.210:3001/new-post', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -59,6 +70,7 @@ const NewPost = () => {
         setCuisine('');
         setCaption('');
         setRecipeContent('');
+        setErrorMessage('');
       })
       .catch(error => {
         console.error(error);
@@ -113,7 +125,7 @@ const NewPost = () => {
         multiline
         numberOfLines={4}
       />
-
+      <Text style={styles.errorText}>{errorMessage}</Text>
       <Button title="Submit" onPress={handleSubmit} />
     </View>
   );
@@ -141,6 +153,13 @@ const styles = StyleSheet.create({
   recipeContent: {
     height: 120,
     textAlignVertical: 'top',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 20,
+    textAlign: 'center',
+    marginBottom: 20,
   },
 });
 

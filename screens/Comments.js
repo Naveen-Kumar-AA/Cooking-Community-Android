@@ -8,6 +8,7 @@ const Comments = ({ route }) => {
   const [currentUsername, setCurrentUsername] = useState("");
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(()=>{
     const getCurrentUsername = async () => {
@@ -23,17 +24,6 @@ const Comments = ({ route }) => {
 
 
   useEffect(() => {
-    // const fetchCommentData = async () => {
-    //   // Fetch the user details
-    //   try {
-    //     const response = await fetch(`http://192.168.29.210:3001/comments/${postId}`);
-    //     const data = await response.json();
-    //     console.log(data);
-    //     setComments(data.result);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
     
     const fetchCommentData = async () => {
       // Fetch the user details
@@ -49,7 +39,7 @@ const Comments = ({ route }) => {
         console.log(data);
         setComments(data.result);
       } catch (error) {
-        console.error(error);
+        setErrorMessage(error);
       }
     };
     
@@ -57,37 +47,18 @@ const Comments = ({ route }) => {
     fetchCommentData();
   }, [commentText]);
 
-  // const handleCommentButton = ()=>{
-  //   const req_body = {
-  //       postID : postId,
-  //       userID : currentUsername,
-  //       comment: commentText        
-  //   }
-  //   fetch('http://192.168.29.210:3001/comments  ', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify(req_body)
-  //     })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setCommentText("");
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
   const handleCommentButton = async () => {
-    console.log("Hello")
+    if(commentText){
+
     const token = await AsyncStorage.getItem('token');
+    
     const req_body = {
       postID: postId,
       userID: currentUsername,
       comment: commentText,
     };
     console.log(commentText);
-    fetch('https://cooking-community-server.onrender.com/comments', {
+    fetch('http://192.168.29.210:3001/add-comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,13 +66,14 @@ const Comments = ({ route }) => {
       },
       body: JSON.stringify(req_body),
     })
-      .then(response => response.json())
+      .then(response => {console.log("HELLO");response.json()})
       .then(data => {
+          console.log(data)
         setCommentText('');
       })
       .catch(error => {
         console.log(error);
-      });
+      });}
   };
   
 
@@ -111,11 +83,12 @@ const Comments = ({ route }) => {
       <FlatList
         data={comments}
         renderItem={({ item }) => (
-            <Comment postID={postId} userID={currentUsername} comment={item.comment} />
+            <Comment postID={postId} userID={item.userid} comment={item.comment} />
         )}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.commentsContainer}
     />
+    <Text style={styles.errorText}>{errorMessage}</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -125,6 +98,7 @@ const Comments = ({ route }) => {
           numberOfLines={3}
           underlineColorAndroid="transparent"
           onChangeText={(text)=>{setCommentText(text)}}
+          value={commentText}
         />
         <TouchableOpacity onPress={handleCommentButton} style={styles.postButton}>
           <Text style={styles.postButtonText}>Post</Text>
@@ -174,6 +148,13 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 10,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   comment: {
     fontSize: 16,

@@ -29,7 +29,7 @@ const OtherProfile = ({ route }) => {
           
         //       // Fetch the user details
         //       try {
-        //         const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${user.username}`);
+        //         const response = await fetch(`http://192.168.29.210:3001/Homepage/${user.username}`);
         //         const data = await response.json();
         //         setUserDetails(data);
         //         setFollowerCount(data.no_of_followers);
@@ -38,7 +38,7 @@ const OtherProfile = ({ route }) => {
         //       }
         //       // Fetch the user posts
         //       try {
-        //         const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${user.username}`);
+        //         const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${user.username}`);
         //         const data = await response.json();
         //         setUserPosts(data);
         //         setNoOfPosts(data.length);
@@ -52,7 +52,7 @@ const OtherProfile = ({ route }) => {
         
           // Fetch the user details
           try {
-            const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${user.username}`, {
+            const response = await fetch(`http://192.168.29.210:3001/Homepage/${user.username}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -66,7 +66,7 @@ const OtherProfile = ({ route }) => {
         
           // Fetch the user posts
           try {
-            const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${user.username}`, {
+            const response = await fetch(`http://192.168.29.210:3001/get-user-posts/${user.username}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -85,7 +85,7 @@ const OtherProfile = ({ route }) => {
   useEffect(()=>{
     // const fetchIsFollowing = async () => {
     //   try {
-    //     const response = await fetch(`https://cooking-community-server.onrender.com/is-following`,{
+    //     const response = await fetch(`http://192.168.29.210:3001/is-following`,{
     //       method : 'post',
     //       headers: {
     //         'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ const OtherProfile = ({ route }) => {
     const fetchIsFollowing = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const response = await fetch(`https://cooking-community-server.onrender.com/is-following`,{
+        const response = await fetch(`http://192.168.29.210:3001/is-following`,{
           method : 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ const OtherProfile = ({ route }) => {
   };
 
   // const toggleFollowClick = () => {
-  //   fetch("https://cooking-community-server.onrender.com/toggle-follow", {
+  //   fetch("http://192.168.29.210:3001/toggle-follow", {
   //     method: "POST",
   //     headers: {
   //       "Content-Type": "application/json"
@@ -195,7 +195,7 @@ const OtherProfile = ({ route }) => {
   const toggleFollowClick = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await fetch('https://cooking-community-server.onrender.com/toggle-follow', {
+      const response = await fetch('http://192.168.29.210:3001/toggle-follow', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
