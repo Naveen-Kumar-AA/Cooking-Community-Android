@@ -48,7 +48,7 @@ const NewPost = () => {
       caption,
       recipe: recipeContent
     };
-    fetch('http://192.168.29.210:3001/new-post', {
+    fetch('https://cooking-community-server.onrender.com/new-post', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

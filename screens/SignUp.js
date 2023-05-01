@@ -29,49 +29,6 @@ const SignUp = ({ navigation }) => {
     }
   }
 
-  // const handleSignUp = async () => {
-  //   setLoading(true);
-  //   setErrorMessage('');
-
-  //   // Check if password and confirm password match
-  //   if (password !== C_password) {
-  //     setErrorMessage('Passwords do not match');
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   // Send sign up request to server
-  //   const response = await fetch('http://192.168.29.210:3001/do-signup', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       username,
-  //       First_name,
-  //       Last_name,
-  //       phn_number,
-  //       email,
-  //       password,
-  //       C_password
-  //     }),
-  //   })
-  //   const data = await response.json();
-  //   setLoading(false);
-  //   console.log(data);
-  //   if (data) {
-  //     if (data.token) {
-  //       storeUsername(username);
-  //       storeToken(data.token);
-  //       setErrorMessage("");
-  //       navigation.navigate('Home');
-  //     } else {
-  //       setErrorMessage(data);
-  //     }
-  //   } else {
-  //     setErrorMessage("Unexpected error. Please try again later.");
-  //   }
-  // };
   const handleSignUp = async () => {
     setLoading(true);
     setErrorMessage('');
@@ -109,7 +66,7 @@ const SignUp = ({ navigation }) => {
     }
   
     // Send sign up request to server
-    const response = await fetch('http://192.168.29.210:3001/do-signup', {
+    const response = await fetch('https://cooking-community-server.onrender.com/do-signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

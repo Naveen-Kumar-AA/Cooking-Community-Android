@@ -48,7 +48,7 @@ const SavedPosts = () => {
     const fetchPosts = async () => {
       try {
         const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-        const response = await fetch(`http://192.168.29.210:3001/get-saved-posts/${currentUsername}`, {
+        const response = await fetch(`https://cooking-community-server.onrender.com/get-saved-posts/${currentUsername}`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Add token to the header
             'Content-Type': 'application/json'

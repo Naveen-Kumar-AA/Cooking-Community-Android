@@ -30,7 +30,7 @@ const Comments = ({ route }) => {
       try {
         const token = await AsyncStorage.getItem('token');
     
-        const response = await fetch(`http://192.168.29.210:3001/comments/${postId}`, {
+        const response = await fetch(`https://cooking-community-server.onrender.com/comments/${postId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -58,7 +58,7 @@ const Comments = ({ route }) => {
       comment: commentText,
     };
     console.log(commentText);
-    fetch('http://192.168.29.210:3001/add-comments', {
+    fetch('https://cooking-community-server.onrender.com/add-comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
