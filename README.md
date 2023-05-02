@@ -61,9 +61,10 @@ We're excited to announce the launch of Cooking Community, a social platform for
 
 - Built using React Native version 0.71.7
 - Node version 14.16.1 was used during development
+- JWT token-based authentication has been implemented for added security
 - SQL injection and other similar protection has been implemented for added security
 - We used Expo SDK version 48.0.15 for development
-- Other notable packages used include @react-navigation, @react-native-elements, @react-native-async-storage, and axios
+- Other notable packages used include @react-navigation, @react-native-elements, @react-native-async-storage
 
 Thank you for using Cooking Community! We hope you enjoy sharing and discovering new recipes with our platform.
 
