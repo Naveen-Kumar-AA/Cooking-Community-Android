@@ -1,4 +1,4 @@
-# Cooking-Community-Android
+# Cooking Community
 
 Cooking Community is a mobile application that allows users to create an account and log in securely to access various features related to recipes. Users can create and delete recipes, filter posts based on meal type, like and comment on other users' posts, save posts to their profile for future reference, search for other users, and visit other users' profiles to follow or unfollow them. The app also includes an option to edit the user's own profile. With features like secure authentication and protection against SQL injection, Cooking Community provides a safe and engaging environment for users to share their love for cooking and connect with like-minded individuals.
 
