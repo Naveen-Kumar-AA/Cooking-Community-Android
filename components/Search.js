@@ -57,19 +57,17 @@ function Search({navigation}) {
   };
 
   
+
   const avatarBackgroundColors = [
     '#FF7F50', // Coral
     '#FFD700', // Gold
-    '#00FF7F', // Spring Green
     '#00BFFF', // Deep Sky Blue
     '#6A5ACD', // Slate Blue
-    '#FF69B4', // Hot Pink
     '#8B008B', // Dark Magenta
     '#FF6347', // Tomato
     '#9370DB', // Medium Purple
     '#00CED1', // Dark Turquoise
     '#FFA07A', // Light Salmon
-    '#32CD32', // Lime Green
     '#FF00FF', // Magenta
     '#B22222', // Fire Brick
     '#FF1493', // Deep Pink
@@ -77,9 +75,11 @@ function Search({navigation}) {
     '#228B22', // Forest Green
     '#4169E1', // Royal Blue
     '#DC143C', // Crimson
-    '#9932CC' // Dark Orchid
+    '#9932CC', // Dark Orchid
+    '#FF8C00', // Orange
+    '#008080', // Teal
   ];
-  
+    
   
   const renderAvatar = (username) => {
     const colorIndex = Math.floor(Math.random() * avatarBackgroundColors.length);
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     },
     searchButton: {
       padding: 10,
-      backgroundColor: '#2196F3',
+      backgroundColor: '#008080',
       borderRadius: 5,
       marginLeft: 5,
     },

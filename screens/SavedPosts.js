@@ -29,21 +29,6 @@ const SavedPosts = () => {
     useEffect(()=>{
         fetchPosts();
     },[currentUsername]);
-  
-    // const fetchPosts = async () => {
-    //   try {
-    //     const response = await fetch(`https://cooking-community-server.onrender.com/get-saved-posts/${currentUsername}`);
-    //     const data = await response.json();
-    //     console.log(data);
-    //     const data1 = data.resultArray;
-    //     console.log(data1);
-    //     setPosts([...data1]); // create new array with updated data
-    //   } catch (error) {
-    //     console.error(error);
-    //   } finally {
-    //     setRefreshing(false); // set refreshing to false after fetch completes
-    //   }
-    // };
     
     const fetchPosts = async () => {
       try {

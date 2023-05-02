@@ -80,7 +80,7 @@ const Feed = () => {
         </TouchableOpacity>
       </View>
     </ScrollView>
-      <FlatList
+      <FlatList 
         data={posts}
         renderItem={renderItem}
         keyExtractor={(item) => item.postID.toString()}
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginHorizontal: 10,
-    color: '#000',
+    color: '#008080',
   },
 
   postList: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   postListContent: {
-    paddingBottom: 10,
+    paddingBottom: 50,
   },
 });
 

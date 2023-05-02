@@ -3,17 +3,17 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const Comment = ({ postID, userID, comment }) => {
   console.log(userID);
+
   const avatarBackgroundColors = [
     '#FF7F50', // Coral
     '#FFD700', // Gold
-    '#00FF7F', // Spring Green
     '#00BFFF', // Deep Sky Blue
     '#6A5ACD', // Slate Blue
-    '#FF69B4', // Hot Pink
     '#8B008B', // Dark Magenta
     '#FF6347', // Tomato
     '#9370DB', // Medium Purple
     '#00CED1', // Dark Turquoise
+    '#FFA07A', // Light Salmon
     '#FF00FF', // Magenta
     '#B22222', // Fire Brick
     '#FF1493', // Deep Pink
@@ -21,8 +21,11 @@ const Comment = ({ postID, userID, comment }) => {
     '#228B22', // Forest Green
     '#4169E1', // Royal Blue
     '#DC143C', // Crimson
-    '#9932CC' // Dark Orchid
+    '#9932CC', // Dark Orchid
+    '#FF8C00', // Orange
+    '#008080', // Teal
   ];
+  
 
   const getInitials = (name) => {
     const initials = name.match(/\b\w/g) || [];

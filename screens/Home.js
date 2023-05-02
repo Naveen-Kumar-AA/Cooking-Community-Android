@@ -12,7 +12,11 @@ const Tab = createBottomTabNavigator();
 
 const HomeTab = ({navigation}) => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+    tabBarOptions={{
+      activeTintColor: '#008080', // Set the active tab color to teal
+    }}
+    >
       <Tab.Screen
         name="Feed"
         component={Feed}

@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    color:'#008080'
   },
   input: {
     borderBottomWidth: 1,
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
   }
   ,
   button: {
-    backgroundColor: '#0066cc',
+    backgroundColor: '#008080',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   postButton: {
-    backgroundColor: '#008cff',
+    backgroundColor: '#008080',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,

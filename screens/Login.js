@@ -102,12 +102,13 @@ Login.navigationOptions = ({ navigation }) => {
     ),
   };
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     paddingHorizontal: 20,
   },
   title: {
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 50,
     textAlign: 'center',
-    color: '#000',
+    color: '#008080',
   },
   input: {
     borderWidth: 1,
@@ -124,10 +125,10 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '100%',
     marginBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5F5F5',
   },
   button: {
-    backgroundColor: '#0066cc',
+    backgroundColor: '#008080',
     padding: 10,
     borderRadius: 5,
     width: '100%',
@@ -139,11 +140,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorText: {
-    color: 'red',
+    color: '#FF4136',
     fontSize: 14,
     marginTop: 20,
     textAlign: 'center',
   },
 });
+
+
 
 export default Login;

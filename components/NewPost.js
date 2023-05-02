@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -12,6 +12,8 @@ const NewPost = () => {
   const [currentUsername, setCurrentUsername] = useState('');
   const [token, setToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   useEffect(()=>{
     const getCurrentUsername = async () => {
@@ -27,6 +29,56 @@ const NewPost = () => {
     getCurrentUsername();
   },[])
 
+  const alertContainerStyle = {
+    position: 'absolute',
+    bottom: 0,
+    width: '75%',
+    alignSelf: 'center',
+  };
+
+  const successAlertStyle = {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 9999,
+  };
+  
+  
+  const errorAlertStyle = {
+    ...successAlertStyle,
+    backgroundColor: '#F44336',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 9999,
+  };
+  
+
+  const handleSuccessAlertDismiss = () => {
+    setShowSuccessAlert(false);
+  };
+  const handleErrorAlertDismiss = () => {
+    setShowErrorAlert(false);
+  };
 
   const handleSubmit =  () => {
     if (!title || !meal || !cuisine || !caption || !recipeContent) {
@@ -38,6 +90,10 @@ const NewPost = () => {
       else if (!recipeContent) emptyField = 'Recipe';
   
       setErrorMessage(`${emptyField} cannot be empty`);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
     const postBody = {
@@ -71,10 +127,22 @@ const NewPost = () => {
         setCaption('');
         setRecipeContent('');
         setErrorMessage('');
+        // Alert.alert('Success', 'New post added successfully!', [{ text: 'OK' }]);
+        setShowSuccessAlert(true);
+    setTimeout(() => {
+      setShowSuccessAlert(false);
+    }, 3000);
+
       })
       .catch(error => {
         console.error(error);
-      });
+        setErrorMessage(error.message);
+      // Alert.alert('Error', error.message, [{ text: 'OK' }]);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
+    });
   };
 
   return (
@@ -125,8 +193,24 @@ const NewPost = () => {
         multiline
         numberOfLines={4}
       />
-      <Text style={styles.errorText}>{errorMessage}</Text>
-      <Button title="Submit" onPress={handleSubmit} />
+      <Button title="Submit" onPress={handleSubmit} color="#008080" />
+      {showSuccessAlert && (
+        <TouchableOpacity
+          style={[successAlertStyle, alertContainerStyle]}
+          onPress={handleSuccessAlertDismiss}>
+          <Text style={{ color: '#fff' }}>New post created successfully!</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* error alert */}
+      {showErrorAlert && (
+        <TouchableOpacity
+        style={[errorAlertStyle, alertContainerStyle]}
+          onPress={handleErrorAlertDismiss}>
+          <Text style={{ color: '#fff' }}>{errorMessage}</Text>
+        </TouchableOpacity>
+      )}
+
     </View>
   );
 };
@@ -141,6 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
+    color: '#008080'
   },
   input: {
     backgroundColor: '#F6F6F6',

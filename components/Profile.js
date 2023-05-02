@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
           borderBottomColor: '#eee',
         },
         avatar: {
-          backgroundColor: '#2196F3',
+          backgroundColor: '#008080',
           width: 90,
           height: 90,
           borderRadius: 45,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
             color: '#666',
         },
         bottomSheet: {
-          backgroundColor: 'rgba(50, 50, 50, 1)',
+          backgroundColor: '#008080',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           padding: 20,

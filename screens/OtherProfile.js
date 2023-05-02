@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
           borderBottomColor: '#eee',
         },
         avatar: {
-          backgroundColor: '#2196F3',
+          backgroundColor: '#008080',
           width: 90,
           height: 90,
           borderRadius: 45,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
           marginBottom: 8,
         },
         followButton: {
-          backgroundColor: '#2196F3',
+          backgroundColor: '#008080',
           width: 100,
           paddingVertical: 8,
           paddingHorizontal: 16,

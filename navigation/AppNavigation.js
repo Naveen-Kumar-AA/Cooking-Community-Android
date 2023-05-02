@@ -35,36 +35,97 @@ const AppNavigation = () => {
         component={Login}
         options={({ navigation }) => ({
           headerTitle: 'Login',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
           headerRight: () => (
             <TouchableOpacity
-  style={styles.button}
-  onPress={() => navigation.navigate('SignUp')}
->
-  <Text style={styles.buttonText}>Sign Up</Text>
-</TouchableOpacity>
-
+              style={styles.button}
+              onPress={() => navigation.navigate('SignUp')}
+            >
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
           ),
         })}
       />
-      <Stack.Screen name="SignUp" component={SignUp} />
-      
-      <Stack.Screen 
-      name="Home" 
-      component={Home} 
-      options={({ navigation }) => ({
-        headerTitle: 'Home',
-        headerLeft: () => (
-            <TouchableOpacity onPress={()=>{logout();}} style={styles.logoutButton}>
-      <Icon name="sign-out" size={32} color="#555" />
-    </TouchableOpacity>
-        ),
-      })}
+
+      <Stack.Screen
+        name="SignUp"
+        component={SignUp}
+        options={{
+          headerTitle: 'Sign Up',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
+        }}
       />
-      
-      <Stack.Screen name="OtherProfile" component={OtherProfile} />
-      <Stack.Screen name="Comments" component={Comments} />
-      <Stack.Screen name="SavedPosts" component={SavedPosts} />
-      <Stack.Screen name="EditProfile" component={EditProfile} />
+
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={({ navigation }) => ({
+          headerTitle: 'Home',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => { logout(); }} style={styles.logoutButton}>
+              <Icon name="sign-out" size={32} color="#fff" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="OtherProfile"
+        component={OtherProfile}
+        options={{
+          headerTitle: 'Other Profile',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="Comments"
+        component={Comments}
+        options={{
+          headerTitle: 'Comments',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="SavedPosts"
+        component={SavedPosts}
+        options={{
+          headerTitle: 'Saved Posts',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{
+          headerTitle: 'Edit Profile',
+          headerTintColor: '#fff',
+          headerStyle: {
+            backgroundColor: '#FF8C00',
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -77,14 +138,23 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   buttonText: {
-    color: 'black',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 14,
   },
   logoutButton:{ 
     paddingLeft:10,
-  }
-  
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  headerStyle: {
+    backgroundColor: '#008080',
+  },
+  headerTintColor: '#fff',
 });
+
 
 export default AppNavigation;

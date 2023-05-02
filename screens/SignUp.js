@@ -12,6 +12,59 @@ const SignUp = ({ navigation }) => {
   const [C_password, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+
+  const alertContainerStyle = {
+    position: 'absolute',
+    bottom: 0,
+    width: '75%',
+    alignSelf: 'center',
+  };
+
+  const successAlertStyle = {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 9999,
+  };
+  
+  
+  const errorAlertStyle = {
+    ...successAlertStyle,
+    backgroundColor: '#F44336',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 9999,
+  };
+
+
+  const handleSuccessAlertDismiss = () => {
+    setShowSuccessAlert(false);
+  };
+  const handleErrorAlertDismiss = () => {
+    setShowErrorAlert(false);
+  };
 
   const storeUsername = async (username) => {
     try {
@@ -37,31 +90,55 @@ const SignUp = ({ navigation }) => {
     if (!username || !First_name || !Last_name || !phn_number || !email || !password || !C_password) {
       setErrorMessage('All fields are required');
       setLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
     if (username !== username.toLowerCase()) {
       setErrorMessage('Username must be in all lowercase letters');
       setLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
     if (!/^\d{10}$/.test(phn_number)) {
       setErrorMessage('Phone number must be 10 digits long');
       setLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
     if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-      setErrorMessage('Email is not valid');
+      setErrorMessage('Email is not valid.(xxxx@xxx.com)');
       setLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,}$/.test(password)) {
       setErrorMessage('Password must contain at least one uppercase letter, one lowercase letter, one numeric value, no special characters and minimum of 7 characters.');
       setLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
     if (password !== C_password) {
       setErrorMessage('Passwords do not match');
       setLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       return;
     }
   
@@ -89,12 +166,24 @@ const SignUp = ({ navigation }) => {
         storeUsername(username);
         storeToken(data.token);
         setErrorMessage("");
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          setShowSuccessAlert(false);
+        }, 3000);
         navigation.navigate('Home');
       } else {
         setErrorMessage(data);
+        setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
       }
     } else {
       setErrorMessage("Unexpected error. Please try again later.");
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 3000);
     }
   };
   
@@ -151,7 +240,6 @@ const SignUp = ({ navigation }) => {
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      <Text style={styles.errorText}>{errorMessage}</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={handleSignUp}
@@ -162,6 +250,22 @@ const SignUp = ({ navigation }) => {
           <Text style={styles.buttonText}>Sign Up</Text>
         )}
       </TouchableOpacity>
+      {showSuccessAlert && (
+        <TouchableOpacity
+          style={[successAlertStyle, alertContainerStyle]}
+          onPress={handleSuccessAlertDismiss}>
+          <Text style={{ color: '#fff' }}>New post created successfully!</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* error alert */}
+      {showErrorAlert && (
+        <TouchableOpacity
+        style={[errorAlertStyle, alertContainerStyle]}
+          onPress={handleErrorAlertDismiss}>
+          <Text style={{ color: '#fff' }}>{errorMessage}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
   
@@ -185,7 +289,7 @@ const styles = StyleSheet.create({
   button: {
     width: '50%',
     height: 40,
-    backgroundColor: '#0066cc',
+    backgroundColor: '#008080',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -198,9 +302,8 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 14,
-    marginTop: 10,
+    marginTop: 20,
     textAlign: 'center',
-    marginBottom: 10,
   },
 });
 

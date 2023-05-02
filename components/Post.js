@@ -135,16 +135,13 @@ const Post = ({ post_details }) => {
   const avatarBackgroundColors = [
     '#FF7F50', // Coral
     '#FFD700', // Gold
-    '#00FF7F', // Spring Green
     '#00BFFF', // Deep Sky Blue
     '#6A5ACD', // Slate Blue
-    '#FF69B4', // Hot Pink
     '#8B008B', // Dark Magenta
     '#FF6347', // Tomato
     '#9370DB', // Medium Purple
     '#00CED1', // Dark Turquoise
     '#FFA07A', // Light Salmon
-    '#32CD32', // Lime Green
     '#FF00FF', // Magenta
     '#B22222', // Fire Brick
     '#FF1493', // Deep Pink
@@ -152,8 +149,11 @@ const Post = ({ post_details }) => {
     '#228B22', // Forest Green
     '#4169E1', // Royal Blue
     '#DC143C', // Crimson
-    '#9932CC' // Dark Orchid
+    '#9932CC', // Dark Orchid
+    '#FF8C00', // Orange
+    '#008080', // Teal
   ];
+  
   
   
   
@@ -298,15 +298,15 @@ const Post = ({ post_details }) => {
   {currentUsername !== post_details.username ? (
         <TouchableOpacity onPress={handleSaveButton} style={styles.bottomSheetItem}>
           {isSaved ? (
-            <IconFontAwesome name="bookmark" size={35} color="#007AFF" style={styles.buttonIconFontAwesome} />
+            <IconFontAwesome name="bookmark" size={35} color="#fff" style={styles.buttonIconFontAwesome} />
           ) : (
-            <Icon name="bookmark" size={35} color="#007AFF" style={styles.buttonIcon} />
+            <Icon name="bookmark" size={35} color="#fff" style={styles.buttonIcon} />
           )}
           <Text style={styles.buttonText}>{isSaved ? 'Unsave post' : 'Save post'}</Text>
         </TouchableOpacity>
       ) : null}
   <TouchableOpacity onPress={() => setIsMenuOpen(false)} style={styles.bottomSheetItem}>
-    <IconFontAwesome name="ban" size={35} color="#8B8B8B" style={styles.buttonIconFontAwesome} />
+    <IconFontAwesome name="ban" size={35} color="#fff" style={styles.buttonIconFontAwesome} />
     <Text style={styles.buttonText}>Cancel</Text>
   </TouchableOpacity>
   </View>
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   bottomSheet: {
-    backgroundColor: 'rgba(50, 50, 50, 1)',
+    backgroundColor: '#008080',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
