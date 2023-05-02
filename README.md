@@ -1,6 +1,6 @@
 # Cooking-Community-Android
 
-Cooking Community is a mobile application that allows users to create an account and log in securely to access various features related to cooking. Users can create and delete recipes, filter posts based on meal type, like and comment on other users' posts, save posts to their profile for future reference, search for other users, and visit other users' profiles to follow or unfollow them. The app also includes an option to edit the user's own profile. With features like secure authentication and protection against SQL injection and cross-site scripting, Cooking Community provides a safe and engaging environment for users to share their love for cooking and connect with like-minded individuals.
+Cooking Community is a mobile application that allows users to create an account and log in securely to access various features related to recipes. Users can create and delete recipes, filter posts based on meal type, like and comment on other users' posts, save posts to their profile for future reference, search for other users, and visit other users' profiles to follow or unfollow them. The app also includes an option to edit the user's own profile. With features like secure authentication and protection against SQL injection, Cooking Community provides a safe and engaging environment for users to share their love for cooking and connect with like-minded individuals.
 
 ## Table of Contents
 
@@ -48,11 +48,14 @@ We're excited to announce the launch of Cooking Community, a social platform for
 ### Features:
 
 - Create an account or sign in with an authenticated login
-- Secure features to prevent SQL injection and cross-site scripting attacks
+- Secure features to prevent SQL injection
 - Create, delete and search recipes with filters based on meal type
 - Like, comment on and save recipes to your profile for easy later reference
 - Search for other users and visit their profiles
 - Follow or unfollow other users and edit your own profile
+- Navigate to different tabs in Home screen such as feed, profile, new post, search.
+- Easy logout is provided for making logout easier instead of visiting profile each time to logout.
+- Clicking on a username on any post will direct you to their profile
 
 ### Technical details:
 
