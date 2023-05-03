@@ -43,7 +43,7 @@ Note: For iOS devices, you may need to have a Mac computer and Xcode installed t
 
 ## Cooking Community Version 1.0.0 Release Notes
 
-We're excited to announce the launch of Cooking Community, a social platform for food enthusiasts to share, discover, and save their favorite recipes!
+Cooking community brings all the food enthusiasts to share, discover and save their favourite recipes!
 
 ### Features:
 
