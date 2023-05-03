@@ -70,14 +70,18 @@ Thank you for using Cooking Community! We hope you enjoy sharing and discovering
 
 <div align="center">
   <img src="screenshots/profile.jpeg" width="32%" />
-  <img src="screenshots/home%20feed.jpeg" width="32%" />
+  <img src="screenshots/signup.jpeg" width="32%" />
   <img src="screenshots/feed%20filter.jpeg" width="32%" />
   <br></br>
   <img src="screenshots/profile%20menu.jpeg" width="32%" />
   <img src="screenshots/search.jpeg" width="32%" />
   <img src="screenshots/update%20profile.jpeg" width="32%" />
   <br></br>
-  <img src="screenshots/saved%20posts.jpeg" width="32%" />
-  <img src="screenshots/delete%20psot%20menu.jpeg" width="32%" />
+  <img src="screenshots/post%20popup.jpeg" width="32%" />
+  <img src="screenshots/comments.jpeg" width="32%" />
   <img src="screenshots/save%20post%20menu.jpeg" width="32%" />
+  <br></br>
+  <img src="screenshots/savedpost.jpeg" width="32%" />
+  <img src="screenshots/deletepost.jpeg" width="32%" />
+  <img src="screenshots/newpost.jpeg" width="32%" />
 </div>
