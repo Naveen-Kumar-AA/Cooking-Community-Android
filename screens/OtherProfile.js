@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import Post from '../components/Post';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API_URL} from '@env';
 
 const OtherProfile = ({ route }) => {
   const { user } = route.params;
@@ -30,7 +31,7 @@ const OtherProfile = ({ route }) => {
         
           // Fetch the user details
           try {
-            const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${user.username}`, {
+            const response = await fetch(`${BACKEND_API_URL}/Homepage/${user.username}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -44,7 +45,7 @@ const OtherProfile = ({ route }) => {
         
           // Fetch the user posts
           try {
-            const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${user.username}`, {
+            const response = await fetch(`${BACKEND_API_URL}/get-user-posts/${user.username}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -91,7 +92,7 @@ const OtherProfile = ({ route }) => {
     const fetchIsFollowing = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const response = await fetch(`https://cooking-community-server.onrender.com/is-following`,{
+        const response = await fetch(`${BACKEND_API_URL}/is-following`,{
           method : 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -173,7 +174,7 @@ const OtherProfile = ({ route }) => {
   const toggleFollowClick = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const response = await fetch('https://cooking-community-server.onrender.com/toggle-follow', {
+      const response = await fetch(`${BACKEND_API_URL}/toggle-follow`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Comment from '../components/Comment';
+import {BACKEND_API_URL} from '@env';
 
 const Comments = ({ route }) => {
   const { postId } = route.params;
@@ -30,7 +31,7 @@ const Comments = ({ route }) => {
       try {
         const token = await AsyncStorage.getItem('token');
     
-        const response = await fetch(`https://cooking-community-server.onrender.com/comments/${postId}`, {
+        const response = await fetch(`${BACKEND_API_URL}/comments/${postId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -58,7 +59,7 @@ const Comments = ({ route }) => {
       comment: commentText,
     };
     console.log(commentText);
-    fetch('https://cooking-community-server.onrender.com/add-comments', {
+    fetch(`${BACKEND_API_URL}/add-comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

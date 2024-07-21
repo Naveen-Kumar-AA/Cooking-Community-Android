@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { View, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import Post from '../components/Post';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API_URL} from '@env';
 
 
 const SavedPosts = () => {
@@ -33,7 +34,7 @@ const SavedPosts = () => {
     const fetchPosts = async () => {
       try {
         const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-        const response = await fetch(`https://cooking-community-server.onrender.com/get-saved-posts/${currentUsername}`, {
+        const response = await fetch(`${BACKEND_API_URL}/get-saved-posts/${currentUsername}`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Add token to the header
             'Content-Type': 'application/json'

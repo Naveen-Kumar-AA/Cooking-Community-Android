@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API_URL} from '@env';
 
 const NewPost = () => {
   const [title, setTitle] = useState('');
@@ -104,7 +105,7 @@ const NewPost = () => {
       caption,
       recipe: recipeContent
     };
-    fetch('https://cooking-community-server.onrender.com/new-post', {
+    fetch(`${BACKEND_API_URL}/new-post`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

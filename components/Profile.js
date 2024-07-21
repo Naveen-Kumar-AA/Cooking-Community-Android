@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {BACKEND_API_URL} from '@env';
 
 
 const Profile = () => {
@@ -25,7 +26,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${currentUsername}`,{
+        const response = await fetch(`${BACKEND_API_URL}/Homepage/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -39,7 +40,7 @@ const Profile = () => {
   
       // Fetch the user posts
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${currentUsername}`,{
+        const response = await fetch(`${BACKEND_API_URL}/get-user-posts/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       // Fetch the user details
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/Homepage/${currentUsername}`,{
+        const response = await fetch(`${BACKEND_API_URL}/Homepage/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -91,7 +92,7 @@ const Profile = () => {
   
       // Fetch the user posts
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/get-user-posts/${currentUsername}`,{
+        const response = await fetch(`${BACKEND_API_URL}/get-user-posts/${currentUsername}`,{
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

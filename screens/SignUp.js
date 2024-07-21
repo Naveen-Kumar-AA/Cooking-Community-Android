@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API_URL} from '@env';
 
 const SignUp = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -83,107 +84,111 @@ const SignUp = ({ navigation }) => {
   }
 
   const handleSignUp = async () => {
-    setLoading(true);
-    setErrorMessage('');
-  
-    // Validate inputs
-    if (!username || !First_name || !Last_name || !phn_number || !email || !password || !C_password) {
-      setErrorMessage('All fields are required');
-      setLoading(false);
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
-      return;
-    }
-    if (username !== username.toLowerCase()) {
-      setErrorMessage('Username must be in all lowercase letters');
-      setLoading(false);
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
-      return;
-    }
-    if (!/^\d{10}$/.test(phn_number)) {
-      setErrorMessage('Phone number must be 10 digits long');
-      setLoading(false);
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
-      return;
-    }
-    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-      setErrorMessage('Email is not valid.(xxxx@xxx.com)');
-      setLoading(false);
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
-      return;
-    }
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,}$/.test(password)) {
-      setErrorMessage('Password must contain at least one uppercase letter, one lowercase letter, one numeric value, no special characters and minimum of 7 characters.');
-      setLoading(false);
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
-      return;
-    }
-    if (password !== C_password) {
-      setErrorMessage('Passwords do not match');
-      setLoading(false);
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
-      return;
-    }
-  
-    // Send sign up request to server
-    const response = await fetch('https://cooking-community-server.onrender.com/do-signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        First_name,
-        Last_name,
-        phn_number,
-        email,
-        password,
-        C_password
-      }),
-    })
-    const data = await response.json();
-    setLoading(false);
-    console.log(data);
-    if (data) {
-      if (data.token) {
-        storeUsername(username);
-        storeToken(data.token);
-        setErrorMessage("");
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-          setShowSuccessAlert(false);
-        }, 3000);
-        navigation.navigate('Home');
-      } else {
-        setErrorMessage(data);
+    try{
+      setLoading(true);
+      setErrorMessage('');
+    
+      // Validate inputs
+      if (!username || !First_name || !Last_name || !phn_number || !email || !password || !C_password) {
+        setErrorMessage('All fields are required');
+        setLoading(false);
         setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        return;
       }
-    } else {
-      setErrorMessage("Unexpected error. Please try again later.");
-      setShowErrorAlert(true);
-      setTimeout(() => {
-        setShowErrorAlert(false);
-      }, 3000);
+      if (username !== username.toLowerCase()) {
+        setErrorMessage('Username must be in all lowercase letters');
+        setLoading(false);
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        return;
+      }
+      if (!/^\d{10}$/.test(phn_number)) {
+        setErrorMessage('Phone number must be 10 digits long');
+        setLoading(false);
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        return;
+      }
+      if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
+        setErrorMessage('Email is not valid.(xxxx@xxx.com)');
+        setLoading(false);
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        return;
+      }
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,}$/.test(password)) {
+        setErrorMessage('Password must contain at least one uppercase letter, one lowercase letter, one numeric value, no special characters and minimum of 7 characters.');
+        setLoading(false);
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        return;
+      }
+      if (password !== C_password) {
+        setErrorMessage('Passwords do not match');
+        setLoading(false);
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        return;
+      }
+    
+      // Send sign up request to server
+      const response = await fetch(`${BACKEND_API_URL}/do-signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          First_name,
+          Last_name,
+          phn_number,
+          email,
+          password,
+          C_password
+        }),
+      })
+      const data = await response.json();
+      setLoading(false);
+      console.log(data);
+      if (data) {
+        if (data.token) {
+          storeUsername(username);
+          storeToken(data.token);
+          setErrorMessage("");
+          setShowSuccessAlert(true);
+          setTimeout(() => {
+            setShowSuccessAlert(false);
+          }, 3000);
+          navigation.navigate('Home');
+        } else {
+          setErrorMessage(data);
+          setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+        }
+      } else {
+        setErrorMessage("Unexpected error. Please try again later.");
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 3000);
+      }
+    }catch(err){
+      console.log("Signup error: ",err);
     }
   };
   

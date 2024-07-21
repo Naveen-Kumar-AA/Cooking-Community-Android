@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {BACKEND_API_URL} from '@env';
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -12,56 +12,70 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     setIsLoading(true);
     setErrorMessage('');
+
     if (!username) {
-      setErrorMessage('Please enter a username.');
-      setIsLoading(false);
-      return;
-    }
-    if (!password) {
-      setErrorMessage('Please enter a password.');
-      setIsLoading(false);
-      return;
-    }
-    try {
-      const response = await Promise.race([
-        fetch('https://cooking-community-server.onrender.com/check-user-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-          }),
-        }),
-        new Promise(resolve => setTimeout(() => resolve({ timeout: true }), 10000))
-      ]);
-      if (response.timeout) {
-        setErrorMessage('An unexpected error occurred, please try again.');
+        setErrorMessage('Please enter a username.');
         setIsLoading(false);
         return;
-      }
-      const data = await response.json();
-      console.log(data);
-      if (data.result.msg) {
-        await AsyncStorage.setItem('token', data.token);
-        await AsyncStorage.setItem('username', username);
-        setUsername("");
-        setPassword("");
-        setErrorMessage("");
-        setIsLoading(false);
-        navigation.navigate('Home');
-      } 
-      if(!data.result.msg) {
-        setErrorMessage('Enter a valid username and password.');
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setErrorMessage('An unexpected error occurred, please try again.');
-      console.log(error);
-      setIsLoading(false);
     }
-  };
+
+    if (!password) {
+        setErrorMessage('Please enter a password.');
+        setIsLoading(false);
+        return;
+    }
+
+    try {
+        const response = await Promise.race([
+            fetch(`${BACKEND_API_URL}/check-user-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+            }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 10000))
+        ]);
+        console.log(response)
+        if (!response.ok) {
+            if (response.status === 404) {
+                setErrorMessage('Endpoint not found. Please check your server configuration.');
+            } else {
+                setErrorMessage(`Error: ${response.statusText}`);
+            }
+            setIsLoading(false);
+            return;
+        }
+
+        const data = await response.json();
+        console.log("data: ", data);
+
+        if (data.result && data.result.msg) {
+            await AsyncStorage.setItem('token', data.token);
+            await AsyncStorage.setItem('username', username);
+            setUsername("");
+            setPassword("");
+            setErrorMessage("");
+            setIsLoading(false);
+            navigation.navigate('Home');
+        } else {
+            setErrorMessage('Enter a valid username and password.');
+            setIsLoading(false);
+        }
+    } catch (error) {
+        if (error.message === 'Request timeout') {
+            setErrorMessage('The request timed out. Please try again.');
+        } else {
+            setErrorMessage('An unexpected error occurred, please try again.');
+            console.log("Unexpected error: ", error);
+        }
+        setIsLoading(false);
+    }
+};
+
   
 
   return (

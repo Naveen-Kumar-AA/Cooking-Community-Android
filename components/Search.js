@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API_URL} from '@env';
 
 function Search({navigation}) {
   const [query, setQuery] = useState('');
@@ -29,7 +30,7 @@ function Search({navigation}) {
 
 
   const handleSearch = () => {
-    fetch(`https://cooking-community-server.onrender.com/search/${query.toLowerCase()}`,{
+    fetch(`${BACKEND_API_URL}/search/${query.toLowerCase()}`,{
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

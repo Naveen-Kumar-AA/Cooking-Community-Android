@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import {BACKEND_API_URL} from '@env';
 
 export default function EditProfile({route}) {
   const profile = route.params;
@@ -34,7 +35,7 @@ export default function EditProfile({route}) {
       token
     };
     console.log(req_body);
-    const response = await fetch('https://cooking-community-server.onrender.com/edit-profile', {
+    const response = await fetch(`${BACKEND_API_URL}/edit-profile`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

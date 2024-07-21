@@ -6,6 +6,7 @@ import { BottomSheet } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import {BACKEND_API_URL} from '@env';
 
 const Post = ({ post_details }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -36,7 +37,7 @@ const Post = ({ post_details }) => {
       likeStatus: !isLiked
     };
 
-    fetch('https://cooking-community-server.onrender.com/update-like-status', {
+    fetch(`${BACKEND_API_URL}/update-like-status`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -76,7 +77,7 @@ const Post = ({ post_details }) => {
       userID: currentUsername
     };
 
-    fetch('https://cooking-community-server.onrender.com/is-liked', {
+    fetch(`${BACKEND_API_URL}/is-liked`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -95,7 +96,7 @@ const Post = ({ post_details }) => {
     });
     const fetchNoOfComments = async ()=>{
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/comments/no-of-comments/${post_details.postID}`,{
+        const response = await fetch(`${BACKEND_API_URL}/comments/no-of-comments/${post_details.postID}`,{
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -111,7 +112,7 @@ const Post = ({ post_details }) => {
     fetchNoOfComments()
     const fetchIsSaved = async () => {
       try {
-        const response = await fetch(`https://cooking-community-server.onrender.com/is-saved/${currentUsername}/${post_details.postID}`, {
+        const response = await fetch(`${BACKEND_API_URL}/is-saved/${currentUsername}/${post_details.postID}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -178,7 +179,7 @@ const Post = ({ post_details }) => {
   
 
   const handleDeletePost = async ()=>{
-    fetch(`https://cooking-community-server.onrender.com/delete-post/${post_details.postID}`, {
+    fetch(`${BACKEND_API_URL}/delete-post/${post_details.postID}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -213,7 +214,7 @@ const Post = ({ post_details }) => {
       userID: currentUsername
     };
     if(!isSaved) {
-      fetch('https://cooking-community-server.onrender.com/save', {
+      fetch(`${BACKEND_API_URL}/save`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -234,7 +235,7 @@ const Post = ({ post_details }) => {
       }); 
   }  
   else {
-    fetch('https://cooking-community-server.onrender.com/unsave', {
+    fetch(`${BACKEND_API_URL}/unsave`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
